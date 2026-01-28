@@ -43,7 +43,7 @@ public class JWTRestController {
 
     //Register user
     @PostMapping("/user/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public ResponseEntity<String> registerUser(@RequestBody User user) {//gets role as a option in form.
         //base check
         //check username if exist
         if (userRepository.existsByUsername(user.getUsername())) {
