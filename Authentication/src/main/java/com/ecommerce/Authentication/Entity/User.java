@@ -30,6 +30,8 @@ public class User implements UserDetails {
     @Column(name = "createdOn", nullable = false)
     LocalDate createdOn;
     String role = "ROLE_USER";
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses;
 
 
     public String getUsername() {

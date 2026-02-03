@@ -19,7 +19,7 @@ public class UDetailsService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserDetails user = userRepository.findByEmail(email).orElse(null);
+        UserDetails user = userRepository.findByEmail(email);
         if (user == null) {
             logger.warning("email Not found");
             throw new UsernameNotFoundException("Email Not found");
