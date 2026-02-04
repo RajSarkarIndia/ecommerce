@@ -34,6 +34,7 @@ public class User implements UserDetails {
     private List<Address> addresses;
 
 
+
     public String getUsername() {
         return this.email;
     }
