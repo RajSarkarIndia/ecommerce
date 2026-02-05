@@ -7,25 +7,19 @@ import com.google.cloud.storage.HttpMethod;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Service
 public class GenerateV4PutObjectSignedUrl {
-    /**
-     * Signing a URL requires Credentials which implement ServiceAccountSigner. These can be set
-     * explicitly using the Storage.SignUrlOption.signWith(ServiceAccountSigner) option. If you don't,
-     * you could also pass a service account signer to StorageOptions, i.e.
-     * StorageOptions().newBuilder().setCredentials(ServiceAccountSignerCredentials). In this example,
-     * neither of these options are used, which means the following code only works when the
-     * credentials are defined via the environment variable GOOGLE_APPLICATION_CREDENTIALS, and those
-     * credentials are authorized to sign a URL. See the documentation for Storage.signUrl for more
-     * details.
-     */
-    public static void generateV4PutObjectSignedUr(String objectName) throws StorageException {
-        String projectId = "my-project-id";
-        String bucketName = "my-bucket";
+
+    public static void generateV4PutObjectSignedUr(@Value("${gcp.project-id}") String projectId, @Value("${gcp.bucket-name}")String bucketName, String objectName) throws StorageException {
+
 
         Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
 
