@@ -35,7 +35,7 @@ public class JWTRestController {
             return ResponseEntity.status(401)
                     .body("Wrong Username or Password");
         }
-        String token = jwtUtil.createToken(user.getEmail(), user.getRole());
+        String token = jwtUtil.createToken(user.getEmail(), user.getRole(),user.getUserId());
         return ResponseEntity.status(200)
                 .body("token=" + token);//use split in ts to split
 

@@ -18,11 +18,12 @@ public class JwtUtil {
 
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
 
-    public String createToken(String username,String role) {
+    public String createToken(String username,String role,Integer userId) {
 
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role)
+                .claim("userId",userId)
                 .setIssuedAt(new Date())
                 .setExpiration(
                         new Date(System.currentTimeMillis() + 10080 * 60 * 1000)

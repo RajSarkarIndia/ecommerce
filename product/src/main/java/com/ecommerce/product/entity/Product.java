@@ -19,7 +19,7 @@ public class Product {
     private Integer productId;
 
     @Column(name="userId",nullable=false)
-    Integer userId;
+    private Integer userId;
 
     @Column(nullable = false, length = 40)
     private String sku;

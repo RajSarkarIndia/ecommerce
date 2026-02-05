@@ -21,7 +21,5 @@ public class ProductImages {
     @Column(name="ObjectName")
     String ObjectName;
 
-    @Column(name="alt",length=40)
-    String alt;
 
 }
