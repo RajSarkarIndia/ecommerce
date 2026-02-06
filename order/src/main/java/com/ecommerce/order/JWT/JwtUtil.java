@@ -1,4 +1,4 @@
-package com.ecommerce.product.JWT;
+package com.ecommerce.order.JWT;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
