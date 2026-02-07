@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     boolean existsByUserIdAndTitle(Integer userId, String title);//if same exist then update the product. No new product Allowed
     Product findByUserIdAndProductId(Integer userId,Integer ProductId);
+    Product findByProductId(Integer ProductId);
 }

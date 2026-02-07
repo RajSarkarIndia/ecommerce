@@ -1,5 +1,6 @@
 package com.ecommerce.order.entity;
 
+import com.ecommerce.order.Enum.DeliveryStatus;
 import com.ecommerce.order.Enum.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,6 +34,8 @@ public class Order {
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
     @Column(name = "paymentId")
     private Integer paymentId;
+    @Column(name="delhivery_Status",nullable=false)
+    private DeliveryStatus deliveryStatus=DeliveryStatus.PLACED;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItem=new ArrayList<>(); //One order = multiple products

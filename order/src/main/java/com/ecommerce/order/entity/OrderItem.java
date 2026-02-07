@@ -1,6 +1,7 @@
 package com.ecommerce.order.entity;
 
 
+import com.ecommerce.order.Enum.DeliveryStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class OrderItem {
     private Order order;
 
     @Column(name = "product_id",nullable = false)
-    private String productId;
+    private Integer productId;
     @Column(name = "quantity",nullable = false)
     private Integer quantity;
     @Column(name = "unit_price", nullable=false)
