@@ -1,6 +1,7 @@
 package com.ecommerce.order.RestController;
 
 
+import com.ecommerce.order.DTO.PaymentDTO;
 import com.ecommerce.order.DTO.ProductInfo;
 import com.ecommerce.order.DTO.ProductResponse;
 import com.ecommerce.order.Enum.DeliveryStatus;
@@ -33,7 +34,8 @@ public class OrdersRestController {
         this.orderRepository = orderRepository;
         this.jwtUtil = jwtUtil;
     }
-Logger logger= Logger.getLogger("OrdersRestController.class");
+
+    Logger logger = Logger.getLogger("OrdersRestController.class");
 
     @PostMapping("/create")
     @Transactional
@@ -83,17 +85,18 @@ Logger logger= Logger.getLogger("OrdersRestController.class");
             order.setTotalAmount(totalAmount);
             orderRepository.save(order);
         } catch (Exception e) {
-            logger.info("Exception in \"create\" endpoint"+e.getMessage());
+            logger.info("Exception in \"create\" endpoint" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Something went wrong");
         }
         return ResponseEntity.status(201)
                 .body("Order Placed Successfully");
     }
-//GET all orders of logged-in user
+
+    //GET all orders of logged-in user
     @GetMapping("/myOrders")
-    public ResponseEntity<List<Order>> getAllOrderOfUser(@RequestHeader("Authorization")String authHeader){
-        List<Order>orders;
+    public ResponseEntity<List<Order>> getAllOrderOfUser(@RequestHeader("Authorization") String authHeader) {
+        List<Order> orders;
         try {
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 return ResponseEntity.status(401)
@@ -109,11 +112,11 @@ Logger logger= Logger.getLogger("OrdersRestController.class");
 
             Claims userInfo = jwtUtil.extractAllClaims(jwt);
             Integer userId = userInfo.get("userId", Integer.class);
-            orders=orderRepository.findAllByUserId(userId);
+            orders = orderRepository.findAllByUserId(userId);
 
 
         } catch (Exception e) {
-            logger.info("Exception in \"myOrders\" endpoint"+e.getMessage());
+            logger.info("Exception in \"myOrders\" endpoint" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
         }
@@ -121,50 +124,13 @@ Logger logger= Logger.getLogger("OrdersRestController.class");
                 .body(orders);
 
 
-
     }
 
 
-
- //get order details
- @GetMapping("/viewOrder/{orderId}")
-    public ResponseEntity<Order> viewOrder(@RequestHeader("Authorization") String authHeader,@PathVariable Integer orderId){
-     Order order;
-        try {
-         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-             return ResponseEntity.status(401)
-                     .body(null);
-         }
-
-         String jwt = authHeader.substring(7);
-
-         if (!jwtUtil.validateToken(jwt)) {
-             return ResponseEntity.status(401)
-                     .body(null);
-         }
-
-         Claims userInfo = jwtUtil.extractAllClaims(jwt);
-         Integer userId = userInfo.get("userId", Integer.class);
-         order=orderRepository.findOrderByUserIdAndOrderId(userId,orderId);
-            if(order==null)
-                return ResponseEntity.status(404).body(null);
-
-
-     } catch (Exception e) {
-         logger.info("Exception in \"viewOrder\" endpoint"+e.getMessage());
-         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                 .body(null);
-     }
-     return ResponseEntity.status(200)
-             .body(order);
- }
-
-
- //Cancel order
-@PutMapping("/cancelOrder/{orderId}")
-@Transactional
-    public ResponseEntity<Order> cancelOrder(@RequestHeader("Authorization") String authHeader,@PathVariable Integer orderId){
-    Order order;
+    //get order details
+    @GetMapping("/viewOrder/{orderId}")
+    public ResponseEntity<Order> viewOrder(@RequestHeader("Authorization") String authHeader, @PathVariable Integer orderId) {
+        Order order;
         try {
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 return ResponseEntity.status(401)
@@ -180,9 +146,44 @@ Logger logger= Logger.getLogger("OrdersRestController.class");
 
             Claims userInfo = jwtUtil.extractAllClaims(jwt);
             Integer userId = userInfo.get("userId", Integer.class);
-            order=orderRepository.findOrderByUserIdAndOrderId(userId,orderId);
-            if(order==null)
-                    return ResponseEntity.status(404).body(null);
+            order = orderRepository.findOrderByUserIdAndOrderId(userId, orderId);
+            if (order == null)
+                return ResponseEntity.status(404).body(null);
+
+
+        } catch (Exception e) {
+            logger.info("Exception in \"viewOrder\" endpoint" + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+        return ResponseEntity.status(200)
+                .body(order);
+    }
+
+
+    //Cancel order
+    @PutMapping("/cancelOrder/{orderId}")
+    @Transactional
+    public ResponseEntity<Order> cancelOrder(@RequestHeader("Authorization") String authHeader, @PathVariable Integer orderId) {
+        Order order;
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(401)
+                        .body(null);
+            }
+
+            String jwt = authHeader.substring(7);
+
+            if (!jwtUtil.validateToken(jwt)) {
+                return ResponseEntity.status(401)
+                        .body(null);
+            }
+
+            Claims userInfo = jwtUtil.extractAllClaims(jwt);
+            Integer userId = userInfo.get("userId", Integer.class);
+            order = orderRepository.findOrderByUserIdAndOrderId(userId, orderId);
+            if (order == null)
+                return ResponseEntity.status(404).body(null);
             if (order.getDeliveryStatus() == DeliveryStatus.TRANSIT ||
                     order.getDeliveryStatus() == DeliveryStatus.OUTFORDELIVERY ||
                     order.getDeliveryStatus() == DeliveryStatus.DELIVERED) {
@@ -194,16 +195,28 @@ Logger logger= Logger.getLogger("OrdersRestController.class");
 
 
         } catch (Exception e) {
-            logger.info("Exception in \"cancel Order\" endpoint"+e.getMessage());
+            logger.info("Exception in \"cancel Order\" endpoint" + e.getMessage());
             return ResponseEntity.status(500)
                     .body(null);
         }
         orderRepository.save(order);
-       return ResponseEntity.status(200)
+        return ResponseEntity.status(200)
                 .body(order);
     }
 
 
+    //Payment received
+
+    @PutMapping("/paymentReceived")
+    public void paymentStatus(@RequestBody PaymentDTO paymentInfo) {
+        Order order = orderRepository.findById(paymentInfo.getOrderId()).orElse(null);
+        if (order != null) {
+            order.setPaymentId(paymentInfo.getPaymentId());
+            order.setPaymentStatus(paymentInfo.getPaymentStatus());
+            orderRepository.save(order);
+        }
+
+    }
 
 
 }

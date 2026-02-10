@@ -1,14 +1,14 @@
 package com.ecommerce.Payment.DTO;
 
+import com.ecommerce.Payment.Enum.PaymentStatus;
 import lombok.*;
 
 @Getter
 @Setter
 public class PaymentDTO {
-    private Integer paymentId;
+    private String paymentId;
     private String orderId;
-    private String stripeSessionId;
-    private String paymentStatus;
+    private PaymentStatus paymentStatus;
     private Double amount;
 
 

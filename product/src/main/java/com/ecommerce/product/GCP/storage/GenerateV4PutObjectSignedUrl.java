@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class GenerateV4PutObjectSignedUrl {
 
-    @Value("${gcp.bucket-name}")
+    @Value("${BucketName}")
     private String bucketName;
 
     private final Storage storage = StorageOptions.getDefaultInstance().getService();

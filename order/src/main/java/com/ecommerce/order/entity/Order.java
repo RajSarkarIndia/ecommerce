@@ -33,7 +33,7 @@ public class Order {
     @Column(name = "paymentStatus", nullable = false)
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
     @Column(name = "paymentId")
-    private Integer paymentId;
+    private String paymentId;
     @Column(name="delhivery_Status",nullable=false)
     private DeliveryStatus deliveryStatus=DeliveryStatus.PLACED;
 

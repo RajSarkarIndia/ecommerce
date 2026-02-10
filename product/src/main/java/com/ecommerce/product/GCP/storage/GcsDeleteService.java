@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GcsDeleteService {
 
-    @Value("${gcp.bucket-name}")
+    @Value("${BucketName}")
     private String bucketName;
 
     private final Storage storage = StorageOptions.getDefaultInstance().getService();

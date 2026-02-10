@@ -16,8 +16,13 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class GenerateV4GetObjectSignedUrl {
+    @Value("${ProjectId}")
+    String projectId;
 
-    public String generateV4GetObjectSignedUrl(@Value("${gcp.project-id}") String projectId, @Value("${gcp.bucket-name}")String bucketName,String objectName) throws StorageException {
+    @Value("${BucketName}")
+    String bucketName;
+
+    public String generateV4GetObjectSignedUrl(String objectName) throws StorageException {
 Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
 
         // Define resource

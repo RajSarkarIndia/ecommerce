@@ -34,16 +34,16 @@ public class JwtUtil {
 
 
 
-//    public Claims extractUsernameAndRole(String token) {
-//
-//        return Jwts.parserBuilder()
-//                .setSigningKey(key)
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody();
-//
-//
-//    }
+    public Claims extractUsernameAndRole(String token) {
+
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+
+    }
 
 
 }
