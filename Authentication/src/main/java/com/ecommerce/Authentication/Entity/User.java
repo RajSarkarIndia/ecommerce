@@ -26,9 +26,9 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false, length = 100)
     String email;
     @Column(name = "password", nullable = false)
-    String Password;
+    String password;
     @Column(name = "createdOn", nullable = false)
-    LocalDate createdOn;
+    LocalDate createdOn=LocalDate.now();
     String role = "ROLE_USER";
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses;

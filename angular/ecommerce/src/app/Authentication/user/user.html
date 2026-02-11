@@ -1,0 +1,23 @@
+<form [formGroup]="userForm">
+  <label for="name" class="form-label">Name</label>
+  <input type="text" class="form-control" name="name" formControlName="name">
+
+  <label for="email" class="form-label">email</label>
+  <input type="email" class="form-control" name="email" formControlName="email">
+
+  @for (addr of addresses; track $index) {
+
+  <div class="border p-2 my-2">
+    <p><strong>Address:</strong> {{ addr.address }}</p>
+    <p><strong>Pincode:</strong> {{ addr.pincode }}</p>
+    <p><strong>Phone:</strong> {{ addr.phoneNumber }}</p>
+  </div>
+  }
+  <button type="button" class="btn btn-primary mt-3" (click)="editForm()">
+    Edit Profile
+  </button>
+
+  <button type="button" class="btn btn-outline-primary" (click)="updateForm()" [hidden]="edit">Save Changes</button>
+
+</form>
+<!-- product info-->

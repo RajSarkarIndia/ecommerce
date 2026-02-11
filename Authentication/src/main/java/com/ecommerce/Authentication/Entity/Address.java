@@ -26,7 +26,5 @@ public class Address {
     Integer pincode;
     @Column(name="Phone_Number")
     Integer phoneNumber;
-    @Column(name="isDefaultAddress")
-    Boolean isDefaultAddress=false;
 
 }
