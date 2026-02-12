@@ -1,4 +1,4 @@
-package com.ecommerce.Authentication.JWT;
+package com.ecommerce.Gateway.JWTUtil;
 
 
 import io.jsonwebtoken.Claims;
@@ -37,12 +37,8 @@ public class JwtUtil {
     public boolean validateToken(String token) {
         try {
             Claims claims = extractAllClaims(token);
-            System.out.println("Validation Success");
-
             return !claims.getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            System.out.println("Validation Failed");
-
             return false;
         }
     }

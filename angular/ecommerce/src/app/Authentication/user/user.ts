@@ -23,7 +23,7 @@ export class User implements OnInit {
   });
 
   ngOnInit() {
-    this.http.post<UserInfo>('http://localhost:8081/getUser', {},{withCredentials: true})
+    this.http.post<UserInfo>('http://localhost:8080/getUser', {},{withCredentials: true})
       .subscribe(response => {
         this.userInfo = response;
 
@@ -55,7 +55,7 @@ export class User implements OnInit {
 
   updateForm(): void {
 
-    this.http.put('http://localhost:8081/editUser', this.userForm.value,  {responseType: 'text' ,withCredentials: true})
+    this.http.put('http://localhost:8080/editUser', this.userForm.value,  {responseType: 'text' ,withCredentials: true})
       .subscribe({
         next: res => {
           alert(res);

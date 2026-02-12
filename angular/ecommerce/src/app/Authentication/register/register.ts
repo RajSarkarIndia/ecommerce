@@ -28,7 +28,7 @@ export class Register {
   register() {
     const userData: User = this.registerForm.value as User;
 
-    this.httpClient.post<string>("http://localhost:8081/user/register", userData)
+    this.httpClient.post<string>("http://localhost:8080/user/register", userData)
       .subscribe({
         next: (response) => {
           console.log("Server response:", response);

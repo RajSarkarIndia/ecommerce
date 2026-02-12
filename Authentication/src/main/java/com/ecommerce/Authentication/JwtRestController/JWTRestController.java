@@ -7,6 +7,7 @@ import com.ecommerce.Authentication.DTO.UpdateUser;
 import com.ecommerce.Authentication.Entity.User;
 import com.ecommerce.Authentication.JWT.JwtUtil;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class JWTRestController {
     private JwtUtil jwtUtil;
     private PasswordEncoder passwordEncoder;
@@ -68,72 +68,76 @@ public class JWTRestController {
     }
 
     //get User Information
-    @PostMapping("getUser")
-    public ResponseEntity<User> getUserDeatils(@RequestHeader("Authentication") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+    //get User Information
+    @PostMapping("/getUser")
+    @Transactional(readOnly=true)
+    public ResponseEntity<User> getUserDeatils(@RequestHeader(name="Authorization",required=false) String authHeader, HttpServletRequest request) {
+
+        if (authHeader == null && request.getAttribute("Authorization")==null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+        if(authHeader==null)
+                authHeader=request.getAttribute("Authorization").toString();
 
-        String jwt = authHeader.substring(7);
-
-        //validate the JWT then fecth claim
-        if (!jwtUtil.validateToken(jwt)) {
-            return ResponseEntity.status(401)
-                    .body(null);
-
+        // 🔥 ADD THIS (safe handling)
+        if (authHeader.startsWith("Bearer ")) {
+            authHeader = authHeader.substring(7);
         }
 
-        //get User information
-        Claims userInfo = jwtUtil.extractAllClaims(jwt);
+        if (!jwtUtil.validateToken(authHeader)) {
+            return ResponseEntity.status(401).body(null);
+        }
+
+        Claims userInfo = jwtUtil.extractAllClaims(authHeader);
         String username = userInfo.getSubject();
         String role = userInfo.get("role", String.class);
         Integer userId = userInfo.get("userId", Integer.class);
+
         User user = userRepository.findByEmail(username);
         if (user != null && username.equals(user.getEmail())) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(user);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
 //update the user
 
     @PutMapping("/editUser")
     @Transactional
-    public ResponseEntity<String> updateUser(@RequestHeader("Authentication") String authHeader, @RequestBody UpdateUser newUser) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+    public ResponseEntity<String> updateUser(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody UpdateUser newUser) {
+
+        if (authHeader == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        String jwt = authHeader.substring(7);
-
-        //validate the JWT then fecth claim
-        if (!jwtUtil.validateToken(jwt)) {
-            return ResponseEntity.status(401)
-                    .body(null);
-
+        if (authHeader.startsWith("Bearer ")) {
+            authHeader = authHeader.substring(7);
         }
 
-        //get User information
-        Claims userInfo = jwtUtil.extractAllClaims(jwt);
+        if (!jwtUtil.validateToken(authHeader)) {
+            return ResponseEntity.status(401).body(null);
+        }
+
+        Claims userInfo = jwtUtil.extractAllClaims(authHeader);
         String username = userInfo.getSubject();
         String role = userInfo.get("role", String.class);
         Integer userId = userInfo.get("userId", Integer.class);
+
         User user = userRepository.findById(userId).orElse(null);
         if (user != null && user.getUsername().equals(username)) {
             user.setEmail(newUser.getEmail());
             user.setName(newUser.getName());
             userRepository.save(user);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("User Updated");
-}
+            return ResponseEntity.status(HttpStatus.OK).body("User Updated");
+        }
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("User not updated");
-
-
     }
+
 }
 
 

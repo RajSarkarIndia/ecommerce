@@ -1,55 +1,62 @@
-import {Component, inject} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
-import {form} from '@angular/forms/signals';
-import {LoginForm} from './login-form';
-import {CommonModule} from '@angular/common';
-import {AuthenticationService} from '../authentication-service';
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { LoginForm } from './login-form';
+import { CommonModule } from '@angular/common';
+import { AuthenticationService } from '../authentication-service';
 import { CookieService } from 'ngx-cookie-service';
-
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrls: ['./login.css'],
 })
 export class Login {
-  cookie: CookieService = inject(CookieService);
 
-  httpClient:HttpClient=inject(HttpClient);
-  authenticationService:AuthenticationService=inject(AuthenticationService);
+  private httpClient = inject(HttpClient);
+  private authenticationService = inject(AuthenticationService);
+  private cookie = inject(CookieService);
 
-  loginForm:any=new FormGroup({
-
-    email:new FormControl<String>('',[Validators.required, Validators.email]),
-    password:new FormControl<String>('',[Validators.minLength(8),Validators.required])
-
-    });
+  loginForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8)])
+  });
 
   login(): void {
+
+    if (this.loginForm.invalid) {
+      alert('Form is invalid');
+      return;
+    }
+
     const loginFormData: LoginForm = this.loginForm.value as LoginForm;
 
+    console.log("Sending login request:", loginFormData);
+
     this.httpClient.post(
-      'http://localhost:8081/login',
+      'http://localhost:8080/login',
       loginFormData,
       { responseType: 'text' }
     ).subscribe({
       next: (response) => {
-        this.cookie.set("Authorization",response);
+        console.log("Login success. Token:", response);
+
+        this.cookie.set("Authorization", response, {
+          path: '/'
+        });
+
         this.authenticationService.setAuthenticated(true);
       },
       error: (err) => {
-        console.error(err);
+        console.error("Login error:", err);
         alert('Login failed');
       }
     });
   }
 
-
-  //reset
-  resetForm(form:any):void{
-    form.reset();
+  resetForm(): void {
+    this.loginForm.reset();
   }
-
 }
