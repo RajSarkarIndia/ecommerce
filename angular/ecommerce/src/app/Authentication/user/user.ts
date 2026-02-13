@@ -23,7 +23,9 @@ export class User implements OnInit {
   });
 
   ngOnInit() {
-    this.http.post<UserInfo>('http://localhost:8080/getUser', {},{withCredentials: true})
+    this.http.get<UserInfo>('http://localhost:8080/getUser', {
+      withCredentials: true
+    })
       .subscribe(response => {
         this.userInfo = response;
 
@@ -33,6 +35,7 @@ export class User implements OnInit {
         });
       });
   }
+
 
   resetForm(){
     if (!this.userInfo) return;

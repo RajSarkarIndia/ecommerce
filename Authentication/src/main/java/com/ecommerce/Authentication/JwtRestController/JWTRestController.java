@@ -69,16 +69,18 @@ public class JWTRestController {
 
     //get User Information
     //get User Information
-    @PostMapping("/getUser")
+    @GetMapping("/getUser")
     @Transactional(readOnly=true)
     public ResponseEntity<User> getUserDeatils(@RequestHeader(name="Authorization",required=false) String authHeader, HttpServletRequest request) {
 
         if (authHeader == null && request.getAttribute("Authorization")==null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        if(authHeader==null)
-                authHeader=request.getAttribute("Authorization").toString();
+        if(authHeader==null) {
+            System.out.println("set from getAttribute");
 
+            authHeader = request.getAttribute("Authorization").toString();
+        }
         // 🔥 ADD THIS (safe handling)
         if (authHeader.startsWith("Bearer ")) {
             authHeader = authHeader.substring(7);
