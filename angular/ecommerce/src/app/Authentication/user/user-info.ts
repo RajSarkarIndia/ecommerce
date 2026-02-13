@@ -5,8 +5,7 @@ export interface UserInfo {
   name:string;
   email:string;
   role:string;
-  address:Address[];
-
+  addresses: Address[];
 
 
 }

@@ -1,6 +1,7 @@
 package com.ecommerce.Authentication.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class Address {
 
     @ManyToOne
     @JoinColumn(name="user_id")
+    @JsonIgnore
     User user;
 
     @Column(name = "address")
@@ -25,6 +27,6 @@ public class Address {
     @Column(name = "pincode")
     Integer pincode;
     @Column(name="Phone_Number")
-    Integer phoneNumber;
+    String phoneNumber;
 
 }

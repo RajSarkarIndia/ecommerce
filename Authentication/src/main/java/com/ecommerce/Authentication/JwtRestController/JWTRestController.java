@@ -1,9 +1,12 @@
 package com.ecommerce.Authentication.JwtRestController;
 
 
+import com.ecommerce.Authentication.DAO.AddressRepository;
 import com.ecommerce.Authentication.DAO.UserRepository;
+import com.ecommerce.Authentication.DTO.AddressDTO;
 import com.ecommerce.Authentication.DTO.LoginForm;
 import com.ecommerce.Authentication.DTO.UpdateUser;
+import com.ecommerce.Authentication.Entity.Address;
 import com.ecommerce.Authentication.Entity.User;
 import com.ecommerce.Authentication.JWT.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -19,11 +22,13 @@ public class JWTRestController {
     private JwtUtil jwtUtil;
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
+    private AddressRepository addressRepository;
 
-    public JWTRestController(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public JWTRestController(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UserRepository userRepository, AddressRepository addressRepository) {
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.addressRepository=addressRepository;
     }
 
     @PostMapping("/login")
@@ -71,16 +76,16 @@ public class JWTRestController {
     //get User Information
     @GetMapping("/getUser")
     @Transactional(readOnly=true)
-    public ResponseEntity<User> getUserDeatils(@RequestHeader(name="Authorization",required=false) String authHeader, HttpServletRequest request) {
+    public ResponseEntity<User> getUserDeatils(@RequestHeader(name="Authorization"/*,required=false*/) String authHeader, HttpServletRequest request) {
 
         if (authHeader == null && request.getAttribute("Authorization")==null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        if(authHeader==null) {
+     /*   if(authHeader==null) {
             System.out.println("set from getAttribute");
 
             authHeader = request.getAttribute("Authorization").toString();
-        }
+        }*/
         // 🔥 ADD THIS (safe handling)
         if (authHeader.startsWith("Bearer ")) {
             authHeader = authHeader.substring(7);
@@ -138,6 +143,105 @@ public class JWTRestController {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("User not updated");
+    }
+
+    @PostMapping("/addAddress")
+    @Transactional
+    public ResponseEntity<String> addAddress(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody AddressDTO dto) {
+
+        if (authHeader == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        if (authHeader.startsWith("Bearer ")) {
+            authHeader = authHeader.substring(7);
+        }
+
+        if (!jwtUtil.validateToken(authHeader)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Token");
+        }
+
+        Claims claims = jwtUtil.extractAllClaims(authHeader);
+        Integer userId = claims.get("userId", Integer.class);
+
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        Address address = new Address();
+        address.setAddress(dto.getAddress());
+        address.setPincode(dto.getPincode());
+        address.setPhoneNumber(dto.getPhoneNumber());
+        address.setUser(user);
+
+        addressRepository.save(address);
+
+        return ResponseEntity.ok("Address Added Successfully");
+    }
+
+    // 🔹 Update Address
+    @PutMapping("/updateAddress/{id}")
+    @Transactional
+    public ResponseEntity<String> updateAddress(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable Integer id,
+            @RequestBody AddressDTO dto) {
+
+        if (authHeader == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        if (authHeader.startsWith("Bearer ")) {
+            authHeader = authHeader.substring(7);
+        }
+
+        if (!jwtUtil.validateToken(authHeader)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Token");
+        }
+
+        Address address = addressRepository.findById(id).orElse(null);
+        if (address == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address not found");
+        }
+
+        address.setAddress(dto.getAddress());
+        address.setPincode(dto.getPincode());
+        address.setPhoneNumber(dto.getPhoneNumber());
+
+        addressRepository.save(address);
+
+        return ResponseEntity.ok("Address Updated Successfully");
+    }
+
+
+    @DeleteMapping("/deleteAddress/{id}")
+    @Transactional
+    public ResponseEntity<String> deleteAddress(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable Integer id) {
+
+        if (authHeader == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        if (authHeader.startsWith("Bearer ")) {
+            authHeader = authHeader.substring(7);
+        }
+
+        if (!jwtUtil.validateToken(authHeader)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Token");
+        }
+
+        if (!addressRepository.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address not found");
+        }
+
+        addressRepository.deleteById(id);
+
+        return ResponseEntity.ok("Address Deleted Successfully");
     }
 
 }

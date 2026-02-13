@@ -1,23 +1,119 @@
-<form [formGroup]="userForm">
-  <label for="name" class="form-label">Name</label>
-  <input type="text" class="form-control" name="name" formControlName="name">
+<!-- ================= PROFILE FORM ================= -->
+<form [formGroup]="userForm" class="mb-4">
 
-  <label for="email" class="form-label">email</label>
-  <input type="email" class="form-control" name="email" formControlName="email">
+  <h4>Profile Information</h4>
+
+  <label class="form-label">Name</label>
+  <input type="text"
+         class="form-control"
+         formControlName="name"
+         [readonly]="edit">
+
+  <label class="form-label mt-2">Email</label>
+  <input type="email"
+         class="form-control"
+         formControlName="email"
+         [readonly]="edit">
+
+  <div class="mt-3">
+    <button type="button"
+            class="btn btn-primary me-2"
+            (click)="editForm()">
+      Edit Profile
+    </button>
+
+    <button type="button"
+            class="btn btn-outline-primary"
+            (click)="updateForm()"
+            [hidden]="edit">
+      Save Changes
+    </button>
+  </div>
+
+</form>
+<!-- ================= ADDRESS SECTION ================= -->
+<div class="mt-4">
+
+  <h4>Your Addresses</h4>
+
+  @if(addresses.length === 0) {
+  <div class="text-center mt-3">
+    No address Found. Please add an address to proceed
+  </div>
+
+  <button type="button"
+          class="btn btn-outline-primary mt-2"
+          (click)="openAddressForm()">
+    Add Address
+  </button>
+  }
+
+  @if(addresses.length > 0) {
 
   @for (addr of addresses; track $index) {
+  <div class="border p-3 my-3 rounded">
 
-  <div class="border p-2 my-2">
     <p><strong>Address:</strong> {{ addr.address }}</p>
     <p><strong>Pincode:</strong> {{ addr.pincode }}</p>
     <p><strong>Phone:</strong> {{ addr.phoneNumber }}</p>
+
+    <button type="button"
+            class="btn btn-sm btn-danger me-2"
+            (click)="deleteAddress(addr.id)">
+      Delete
+    </button>
+
+    <button type="button"
+            class="btn btn-sm btn-warning"
+            (click)="updateAddress(addr.id, addr)">
+      Update
+    </button>
+
   </div>
   }
-  <button type="button" class="btn btn-primary mt-3" (click)="editForm()">
-    Edit Profile
+
+  <button type="button"
+          class="btn btn-outline-primary"
+          (click)="openAddressForm()">
+    Add Another Address
+  </button>
+  }
+
+</div>
+<!-- ================= ADDRESS FORM ================= -->
+@if(showAddressForm) {
+
+<form [formGroup]="addressForm" class="border p-4 mt-4 bg-light rounded">
+
+  <h5>Add Address</h5>
+
+  <label class="form-label">Address</label>
+  <input type="text"
+         class="form-control"
+         formControlName="address">
+
+  <label class="form-label mt-2">Pincode</label>
+  <input type="number"
+         class="form-control"
+         formControlName="pincode">
+
+  <label class="form-label mt-2">Phone Number</label>
+  <input type="number"
+         class="form-control"
+         formControlName="phoneNumber">
+
+  <button type="button"
+          class="btn btn-success mt-3 me-2"
+          (click)="submitAddress()">
+    Save Address
   </button>
 
-  <button type="button" class="btn btn-outline-primary" (click)="updateForm()" [hidden]="edit">Save Changes</button>
+  <button type="button"
+          class="btn btn-secondary mt-3"
+          (click)="closeAddressForm()">
+    Cancel
+  </button>
 
 </form>
-<!-- product info-->
+
+}
