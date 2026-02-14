@@ -1,5 +1,6 @@
 package com.ecommerce.product.entity;
 
+import com.ecommerce.product.Enum.ProductStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,13 +35,13 @@ public class Product {
     private String description;
 
     @Column(nullable = false)
-    private Integer price;
+    private Double price;
 
     @Column(nullable = false)
     private Integer stock;
 
     @Column(nullable = false)
-    private String status;
+    private ProductStatus status;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt= LocalDateTime.now();

@@ -1,35 +1,23 @@
 package com.ecommerce.product.DTO;
 
 import com.ecommerce.product.Enum.ProductStatus;
-import com.ecommerce.product.entity.ProductImages;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
+
+import lombok.*;
+
 
 @Getter
 @Setter
-public class ProductResponse {
-
-    private Integer productId;
+public class ProductInfo {
 
     private String sku;
-
     private String title;
-
     private String description;
-
     private Double price;
-
     private Integer stock;
-
     private ProductStatus status;
-
-    private LocalDateTime createdAt;
-
     private List<String> categories;
 
-    private List<ProductImageDetails> images;
+
 }
