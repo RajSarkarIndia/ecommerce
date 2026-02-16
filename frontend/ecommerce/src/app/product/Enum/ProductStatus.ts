@@ -1,0 +1,8 @@
+export enum ProductStatus {
+  ACTIVE = 'ACTIVE',
+  OUT_OF_STOCK = 'OUT_OF_STOCK',
+  HOLD = 'HOLD',
+  DISCONTINUED = 'DISCONTINUED',
+  DELETED = 'DELETED',
+  ARCHIVED = 'ARCHIVED'
+}

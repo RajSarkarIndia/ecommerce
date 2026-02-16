@@ -1,4 +1,5 @@
 package com.ecommerce.order.DTO;
+import com.ecommerce.order.Enum.ProductStatus;
 import lombok.*;
 
 @Getter
@@ -8,7 +9,7 @@ public class ProductResponse {
     private String title;
     private Double price;
     private Integer stock;//update the stock too
-    private String status;
+    private ProductStatus status;
 
 
 }

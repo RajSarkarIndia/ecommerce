@@ -1,5 +1,6 @@
 package com.ecommerce.product.DTO;
 
+import com.ecommerce.product.Enum.ProductCategory;
 import com.ecommerce.product.Enum.ProductStatus;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class ProductInfo {
     private Double price;
     private Integer stock;
     private ProductStatus status;
-    private List<String> categories;
+    private List<ProductCategory> categories;
 
 
 }

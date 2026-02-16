@@ -160,7 +160,7 @@ public class PaymentRestController {
                     dto.setPaymentId(paymentId);
                     dto.setPaymentStatus(PaymentStatus.SUCCESS);
 
-                    orderApi.paymentStatus(dto);
+                    orderApi.paymentStatus("paymentKey",dto);
                 } else {
                     logger.warning("Payment record not found for orderId " + orderId);
                 }

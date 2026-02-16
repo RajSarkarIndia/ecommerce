@@ -1,5 +1,6 @@
 package com.ecommerce.product.entity;
 
+import com.ecommerce.product.Enum.ProductCategory;
 import com.ecommerce.product.Enum.ProductStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -41,6 +42,7 @@ public class Product {
     private Integer stock;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
     @Column(nullable = false, updatable = false)
@@ -48,8 +50,9 @@ public class Product {
 
     @ElementCollection
     @CollectionTable(name = "product_category", joinColumns = @JoinColumn(name = "product_id"))
+    @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    private List<String> categories;
+    private List<ProductCategory> categories;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImages> productImages;

@@ -39,6 +39,7 @@ public class ProductProductResponseMapperClass {
                             .stream()
                             .map(image -> {
                                 ProductImageDetails details = new ProductImageDetails();
+                                details.setImageId(image.getImageId());
                                 details.setObjectName(image.getObjectName());
 
                                 String signedUrl =

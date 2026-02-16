@@ -1,5 +1,6 @@
 package com.ecommerce.product.DTO;
 
+import com.ecommerce.product.Enum.ProductCategory;
 import com.ecommerce.product.Enum.ProductStatus;
 import com.ecommerce.product.entity.ProductImages;
 import lombok.Builder;
@@ -29,7 +30,7 @@ public class ProductResponse {
 
     private LocalDateTime createdAt;
 
-    private List<String> categories;
+    private List<ProductCategory> categories;
 
     private List<ProductImageDetails> images;
 }

@@ -4,6 +4,7 @@ import lombok.*;
 @Getter
 @Setter
 public class ProductImageDetails {
+    Integer imageId;
     String objectName;
     String url;
 }

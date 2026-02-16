@@ -1,5 +1,6 @@
 package com.ecommerce.product.DAO;
 
+import com.ecommerce.product.Enum.ProductCategory;
 import com.ecommerce.product.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,5 +14,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Product findByUserIdAndProductId(Integer userId,Integer ProductId);
     Product findByProductId(Integer ProductId);
     List<Product> findAllByUserId(Integer userId);
-    List<Product> findAllByCategories(String category);
+    List<Product> findAllByCategories(ProductCategory category);
 }

@@ -14,7 +14,7 @@ public class ProductInfoToProductMapper {
         product.setDescription(productInfo.getDescription());
         product.setPrice(productInfo.getPrice());
         product.setStock(productInfo.getStock());
-        product.setStatus(product.getStatus());
+        product.setStatus(productInfo.getStatus());
         product.setCategories(productInfo.getCategories());
         return product;
     }

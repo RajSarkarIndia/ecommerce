@@ -5,6 +5,7 @@ import com.ecommerce.product.DAO.ProductImageRepository;
 import com.ecommerce.product.DTO.ProductImageDetails;
 import com.ecommerce.product.DTO.ProductInfo;
 import com.ecommerce.product.DTO.ProductResponse;
+import com.ecommerce.product.Enum.ProductCategory;
 import com.ecommerce.product.GCP.storage.*;
 import com.ecommerce.product.JWT.JwtUtil;
 import com.ecommerce.product.DAO.ProductRepository;
@@ -68,6 +69,7 @@ public class ProductRestController {
 
         if (productInfo != null && "ROLE_SELLER".equals(role) && userId != null && !productRepository.existsByUserIdAndTitle(userId, productInfo.getTitle())) {
             Product product = ProductInfoToProductMapper.mapper(productInfo);
+            product.setUserId(userId);
             productRepository.save(product);
             return ResponseEntity.status(HttpStatus.OK)
                     .body("Product Added success fully");
@@ -331,7 +333,7 @@ public class ProductRestController {
     @GetMapping("/productCategory/{category}")
     @Transactional(readOnly = true)
     public ResponseEntity<List<ProductResponse>> productCatrgory(
-            @PathVariable String category,
+            @PathVariable ProductCategory category,
             @RequestHeader("Authorization") String authHeader) {
 
         try {
