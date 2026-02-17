@@ -1,5 +1,5 @@
-import { ProductStatus } from './Enum/ProductStatus';
-import {ProductCategory} from './Enum/ProductCategory';
+import { ProductStatus } from '../Enum/ProductStatus';
+import {ProductCategory} from '../Enum/ProductCategory';
 
 export interface ProductImage {
   imageId: number;

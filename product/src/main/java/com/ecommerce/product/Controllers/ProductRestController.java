@@ -371,6 +371,19 @@ public class ProductRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+//view Product
+    @GetMapping("/view/{productId}")
+    public ResponseEntity<ProductResponse> viewProduct(@PathVariable Integer productId){
+        Product product=productRepository.findByProductId(productId);
+        if(product!=null) {
+            ProductResponse productResponse=productProductResponseMapperClass.mapIt(product);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(productResponse);
+        }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(null);
+    }
+
 
 //buy
 

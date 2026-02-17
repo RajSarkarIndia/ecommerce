@@ -1,10 +1,7 @@
 package com.ecommerce.order.RestController;
 
 
-import com.ecommerce.order.DTO.OrderResponse;
-import com.ecommerce.order.DTO.PaymentDTO;
-import com.ecommerce.order.DTO.ProductInfoForBuying;
-import com.ecommerce.order.DTO.ProductResponse;
+import com.ecommerce.order.DTO.*;
 import com.ecommerce.order.Enum.DeliveryStatus;
 import com.ecommerce.order.FeignClient.PaymentAPI;
 import com.ecommerce.order.FeignClient.ProductAPI;
@@ -12,6 +9,7 @@ import com.ecommerce.order.JWT.JwtUtil;
 import com.ecommerce.order.Repository.OrderRepository;
 import com.ecommerce.order.entity.Order;
 import com.ecommerce.order.entity.OrderItem;
+import com.ecommerce.order.mapper.OrderToOrderResponse;
 import com.ecommerce.order.mapper.OrderToOrderResponseMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.transaction.*;
@@ -121,7 +119,7 @@ public class OrdersRestController {
             Claims userInfo = jwtUtil.extractAllClaims(jwt);
             Integer userId = userInfo.get("userId", Integer.class);
             orders = orderRepository.findAllByUserId(userId);
-            List<OrderResponse>allProduct= OrderToOrderResponseMapper.mapOrders(orders);
+            List<OrderResponse> allProduct = OrderToOrderResponseMapper.mapOrders(orders);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(allProduct);
 
@@ -132,13 +130,12 @@ public class OrdersRestController {
         }
 
 
-
     }
 
 
     //get order details
     @GetMapping("/viewOrder/{orderId}")
-    public ResponseEntity<Order> viewOrder(@RequestHeader("Authorization") String authHeader, @PathVariable Integer orderId) {
+    public ResponseEntity<OrderResponse> viewOrder(@RequestHeader("Authorization") String authHeader, @PathVariable Integer orderId) {
         Order order;
         try {
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -156,24 +153,25 @@ public class OrdersRestController {
             Claims userInfo = jwtUtil.extractAllClaims(jwt);
             Integer userId = userInfo.get("userId", Integer.class);
             order = orderRepository.findOrderByUserIdAndOrderId(userId, orderId);
-            if (order == null)
-                return ResponseEntity.status(404).body(null);
+            if (order == null) {
 
+                    return ResponseEntity.status(404).body(null);
+            }
 
         } catch (Exception e) {
             logger.info("Exception in \"viewOrder\" endpoint" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
         }
-        return ResponseEntity.status(200)
-                .body(order);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new OrderToOrderResponse().mapIt(order));
     }
 
 
     //Cancel order
-    @PutMapping("/cancelOrder/{orderId}")
+    @DeleteMapping("/cancelOrder/{orderId}")
     @Transactional
-    public ResponseEntity<Order> cancelOrder(@RequestHeader("Authorization") String authHeader, @PathVariable Integer orderId) {
+    public ResponseEntity<Void> cancelOrder(@RequestHeader("Authorization") String authHeader, @PathVariable Integer orderId) {
         Order order;
         try {
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -210,13 +208,14 @@ public class OrdersRestController {
         }
         orderRepository.save(order);
         return ResponseEntity.status(200)
-                .body(order);
+                .body(null);
     }
 
 
-    //Payment received
+    //Payment webhook
 
     @PutMapping("/paymentReceived")
+    @Transactional
     public ResponseEntity<Void> paymentStatus(@RequestHeader("PaymentKey") String paymentKey, @RequestBody PaymentDTO paymentInfo) {
         if (!paymentKey.equals("paymentKey")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

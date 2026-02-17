@@ -1,11 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import {Component, inject, OnInit} from '@angular/core';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HttpClient} from '@angular/common/http';
+import {CommonModule} from '@angular/common';
 
-import { ProductStatus } from './Enum/ProductStatus';
-import { ProductCategory } from './Enum/ProductCategory';
-import { ProductDTO } from './product-Model';
+import {ProductStatus} from './Enum/ProductStatus';
+import {ProductCategory} from './Enum/ProductCategory';
+import {ProductDTO} from './DTO/product-Model';
 
 @Component({
   selector: 'app-product',
@@ -41,7 +41,7 @@ export class Product implements OnInit {
   loadProducts(): void {
     this.http.get<ProductDTO[]>(
       "http://localhost:8080/product/postedProducts",
-      { withCredentials: true }
+      {withCredentials: true}
     ).subscribe({
       next: (data) => this.products = data,
       error: (err) => console.error("Load failed", err)
@@ -58,7 +58,7 @@ export class Product implements OnInit {
     this.http.post(
       "http://localhost:8080/product/new",
       product,
-      { withCredentials: true }
+      {withCredentials: true}
     ).subscribe({
       next: () => {
         this.addProductForm.reset({
@@ -88,7 +88,7 @@ export class Product implements OnInit {
     this.http.post(
       "http://localhost:8080/product/add/image/" + productId,
       formData,
-      { withCredentials: true }
+      {withCredentials: true}
     ).subscribe({
       next: () => {
         this.selectedFile = undefined as any;
@@ -101,7 +101,7 @@ export class Product implements OnInit {
   deleteImage(productId: number, imageId: number): void {
     this.http.delete(
       "http://localhost:8080/product/delete/image/" + productId + "/" + imageId,
-      { withCredentials: true }
+      {withCredentials: true}
     ).subscribe({
       next: () => this.loadProducts(),
       error: (err) => console.error("Delete image failed", err)
@@ -111,7 +111,7 @@ export class Product implements OnInit {
   deleteProduct(productId: number): void {
     this.http.delete(
       "http://localhost:8080/product/delete/" + productId,
-      { withCredentials: true }
+      {withCredentials: true}
     ).subscribe({
       next: () => this.loadProducts(),
       error: (err) => console.error("Delete product failed", err)
@@ -128,10 +128,29 @@ export class Product implements OnInit {
     this.http.put(
       "http://localhost:8080/product/update/" + product.productId,
       updatedProduct,
-      { withCredentials: true }
+      {withCredentials: true}
     ).subscribe({
       next: () => product.status = newStatus,
       error: (err) => console.error("Status update failed", err)
     });
   }
+
+//buy product
+  buyProduct(productId: number, quantity: number) {
+    //place the order and show the pay now button
+    this.http.put<String>("http://localhost:8080/product/buy/" + productId + "/" + quantity, {withCredentials: true})
+      .subscribe({
+        next: (response) => {
+          console.log("Order Placed Successfully\n" + response);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+
+
+      });
+
+  }
+
+
 }

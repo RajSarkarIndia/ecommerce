@@ -1,0 +1,8 @@
+export enum DeliveryStatus {
+  PLACED,
+  PACKED,
+  TRANSIT,
+  OUTFORDELIVERY,
+  DELIVERED,
+  CANCELLED
+}
