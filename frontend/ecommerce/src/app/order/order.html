@@ -1,1 +1,118 @@
-<p>order works!</p>
+<div class="container mt-4">
+
+  <h3 class="mb-4">My Orders</h3>
+
+  @if (!allOrder || allOrder.length === 0) {
+  <div class="alert alert-info">
+    No Orders Found
+  </div>
+  }
+
+  @for (order of allOrder; track order.orderId) {
+
+  <div class="card mb-3 shadow-sm">
+
+    <!-- HEADER -->
+    <div class="card-header d-flex justify-content-between">
+        <span>
+          <strong>Order #{{ order.orderId }}</strong>
+        </span>
+      <span class="fw-bold">
+          ₹ {{ order.totalAmount }}
+        </span>
+    </div>
+
+    <div class="card-body">
+
+      <!-- PAYMENT STATUS -->
+      <p>
+        <strong>Payment:</strong>
+
+        @if (order.paymentStatus === PaymentStatus.PENDING) {
+        <span class="badge bg-warning text-dark">
+              PENDING
+            </span>
+        }
+        @else if (order.paymentStatus === PaymentStatus.SUCCESS) {
+        <span class="badge bg-success">
+              SUCCESS
+            </span>
+        }
+        @else if (order.paymentStatus === PaymentStatus.FAILED) {
+        <span class="badge bg-danger">
+              FAILED
+            </span>
+        }
+        @else {
+        <span class="badge bg-secondary">
+              {{ order.paymentStatus }}
+            </span>
+        }
+
+      </p>
+
+      <!-- DELIVERY STATUS -->
+      <p>
+        <strong>Delivery:</strong>
+        <span class="badge bg-info text-dark">
+            {{ order.deliveryStatus }}
+          </span>
+      </p>
+
+      <!-- ACTION BUTTONS -->
+      <div class="mb-2">
+
+        <button
+          class="btn btn-sm btn-outline-primary me-2"
+          (click)="getOrderDetails(order.orderId)">
+          View Details
+        </button>
+
+        @if (
+        order.deliveryStatus !== DeliveryStatus.DELIVERED &&
+        order.deliveryStatus !== DeliveryStatus.CANCELLED
+        ) {
+        <button
+          class="btn btn-sm btn-outline-danger"
+          (click)="cancelOrder(order.orderId)">
+          Cancel Order
+        </button>
+        }
+
+      </div>
+
+      <!-- ORDER DETAILS -->
+      @if (orderInfo && orderInfo.orderId === order.orderId) {
+
+      <hr>
+
+      <h6>Items</h6>
+
+      @for (item of orderInfo.items; track item.productId) {
+
+      <div class="d-flex justify-content-between border-bottom py-2">
+
+              <span>
+                Product ID: {{ item.productId }}
+              </span>
+
+        <span>
+                Qty: {{ item.quantity }}
+              </span>
+
+        <span>
+                ₹ {{ item.unitPrice }}
+              </span>
+
+      </div>
+
+      }
+
+      }
+    </div>
+
+  </div>
+
+  }
+
+</div>

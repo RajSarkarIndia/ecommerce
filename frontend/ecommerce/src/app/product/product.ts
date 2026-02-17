@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
@@ -14,9 +14,12 @@ import {ProductDTO} from './DTO/product-Model';
   templateUrl: './product.html',
   styleUrl: './product.css',
 })
-export class Product implements OnInit {
+export class Product {
+showProducts: boolean=false;
 
   private http = inject(HttpClient);
+private cdr = inject(ChangeDetectorRef);
+
 
   products: ProductDTO[] = [];
   selectedFile!: File;
@@ -34,16 +37,20 @@ export class Product implements OnInit {
     categories: new FormControl<ProductCategory[]>([])
   });
 
-  ngOnInit(): void {
-    this.loadProducts();
-  }
+
 
   loadProducts(): void {
     this.http.get<ProductDTO[]>(
       "http://localhost:8080/product/postedProducts",
       {withCredentials: true}
     ).subscribe({
-      next: (data) => this.products = data,
+      next: (data) => {
+this.products = [...data];
+this.showProducts=true;
+      this.cdr.detectChanges();   // 🔥 FORCE RENDER
+console.log("DATA RECEIVED:", data);
+
+},
       error: (err) => console.error("Load failed", err)
     });
   }
@@ -138,7 +145,7 @@ export class Product implements OnInit {
 //buy product
   buyProduct(productId: number, quantity: number) {
     //place the order and show the pay now button
-    this.http.put<String>("http://localhost:8080/product/buy/" + productId + "/" + quantity, {withCredentials: true})
+    this.http.put<String>("http://localhost:8080/product/buy/" + productId + "/" + quantity,{}, {withCredentials: true})
       .subscribe({
         next: (response) => {
           console.log("Order Placed Successfully\n" + response);

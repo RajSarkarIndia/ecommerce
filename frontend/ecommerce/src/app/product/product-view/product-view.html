@@ -1,1 +1,85 @@
-<p>product-view works!</p>
+<div class="container mt-4">
+
+  <!-- LOADING STATE -->
+  @if (!productResponse) {
+  <div class="alert alert-info">
+    Loading Product...
+  </div>
+  }
+
+  <!-- PRODUCT CONTENT -->
+  @if (productResponse) {
+
+  <div class="card shadow-sm">
+
+    <div class="row g-0">
+
+      <!-- IMAGE SECTION -->
+      <div class="col-md-6">
+
+        @if (productResponse.images.length > 0) {
+        <img
+          [src]="productResponse.images[0].url"
+          class="img-fluid rounded-start"
+          style="height:400px; object-fit:cover;">
+        } @else {
+        <img
+          src="https://via.placeholder.com/500"
+          class="img-fluid rounded-start"
+          style="height:400px; object-fit:cover;">
+        }
+
+      </div>
+
+      <!-- DETAILS SECTION -->
+      <div class="col-md-6">
+
+        <div class="card-body">
+
+          <h3 class="card-title">
+            {{ productResponse.title }}
+          </h3>
+
+          <p class="text-muted">
+            SKU: {{ productResponse.sku }}
+          </p>
+
+          <p>
+            {{ productResponse.description }}
+          </p>
+
+          <h4 class="text-success">
+            ₹ {{ productResponse.price }}
+          </h4>
+
+          <p>
+            <strong>Stock:</strong>
+            {{ productResponse.stock }}
+          </p>
+
+          <p>
+            <strong>Status:</strong>
+            <span class="badge bg-primary">
+                {{ productResponse.status }}
+              </span>
+          </p>
+
+          <p>
+            <strong>Categories:</strong>
+            @for (cat of productResponse.categories; track cat) {
+            <span class="badge bg-secondary me-1">
+                  {{ cat }}
+                </span>
+            }
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>

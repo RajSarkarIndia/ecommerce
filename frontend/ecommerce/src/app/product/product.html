@@ -1,8 +1,12 @@
-<h1 class="text-danger">PRODUCT COMPONENT ACTIVE</h1>
+<h1 class="text-danger text-center mt-3">
+  PRODUCT COMPONENT ACTIVE
+</h1>
 
 <div class="container mt-5">
 
-  <!-- ADD PRODUCT -->
+  <!-- ========================= -->
+  <!-- ADD PRODUCT SECTION       -->
+  <!-- ========================= -->
   <div class="card shadow mb-5">
     <div class="card-header bg-dark text-white">
       <h4 class="mb-0">Add Product</h4>
@@ -13,65 +17,60 @@
 
         <div class="row mb-3">
           <div class="col-md-6">
-            <label>SKU</label>
+            <label class="form-label">SKU</label>
             <input class="form-control" formControlName="sku">
           </div>
 
           <div class="col-md-6">
-            <label>Title</label>
+            <label class="form-label">Title</label>
             <input class="form-control" formControlName="title">
           </div>
         </div>
 
         <div class="mb-3">
-          <label>Description</label>
+          <label class="form-label">Description</label>
           <textarea class="form-control"
                     rows="3"
-                    formControlName="description"></textarea>
+                    formControlName="description">
+          </textarea>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-4">
-            <label>Price</label>
+            <label class="form-label">Price</label>
             <input type="number"
                    class="form-control"
                    formControlName="price">
           </div>
 
           <div class="col-md-4">
-            <label>Stock</label>
+            <label class="form-label">Stock</label>
             <input type="number"
                    class="form-control"
                    formControlName="stock">
           </div>
 
           <div class="col-md-4">
-            <label>Status</label>
+            <label class="form-label">Status</label>
             <select class="form-select"
                     formControlName="status">
 
               @for (status of productStatuses; track status) {
-              <option [ngValue]="status">
-                {{ status }}
-              </option>
+                <option [ngValue]="status">{{ status }}</option>
               }
 
             </select>
           </div>
         </div>
 
-        <!-- CATEGORY MULTI SELECT -->
         <div class="mb-3">
-          <label>Categories</label>
-
+          <label class="form-label">Categories</label>
           <select class="form-select"
                   formControlName="categories"
                   multiple>
 
             @for (cat of categoryOptions; track cat) {
-            <option [ngValue]="cat">
-              {{ cat }}
-            </option>
+              <option [ngValue]="cat">{{ cat }}</option>
             }
 
           </select>
@@ -88,63 +87,101 @@
   </div>
 
 
-  <!-- PRODUCT LIST -->
-  <h4 class="mb-3">My Products</h4>
+  <!-- ========================= -->
+  <!-- BUTTON OR PRODUCT LIST    -->
+  <!-- ========================= -->
 
-  <div class="row">
+  @if (!showProducts) {
 
-    @for (product of products; track product.productId) {
+    <div class="text-center mb-4">
+      <button class="btn btn-dark"
+              (click)="loadProducts()">
+        View My Products
+      </button>
+    </div>
 
-    <div class="col-md-4 mb-4">
+  } @else {
 
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
+    <div class="row">
 
-          <h5>{{ product.title }}</h5>
+      @for (product of products; track product.productId) {
 
-          <p class="text-muted small">
-            {{ product.description }}
-          </p>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 shadow-sm">
 
-          <p><strong>Price:</strong> ₹{{ product.price }}</p>
-          <p><strong>Stock:</strong> {{ product.stock }}</p>
-
-          <!-- DISPLAY CATEGORIES -->
-          <p>
-            <strong>Categories:</strong>
-            @for (cat of product.categories; track cat) {
-            <span class="badge bg-secondary me-1">
-                  {{ cat }}
-                </span>
-            }
-          </p>
-
-          <!-- STATUS -->
-          <select class="form-select form-select-sm mb-3"
-                  [(ngModel)]="product.status"
-                  (ngModelChange)="updateStatus(product, $event)"
-                  [ngModelOptions]="{ standalone: true }">
-
-            @for (status of productStatuses; track status) {
-            <option [ngValue]="status">
-              {{ status }}
-            </option>
+            @if (product.images.length > 0) {
+              <img [src]="product.images[0].url"
+                   class="card-img-top"
+                   style="height:200px; object-fit:cover;">
+            } @else {
+              <img src="https://via.placeholder.com/300"
+                   class="card-img-top"
+                   style="height:200px; object-fit:cover;">
             }
 
-          </select>
+            <div class="card-body">
 
-          <button class="btn btn-danger btn-sm w-100 mb-3"
-                  (click)="deleteProduct(product.productId)">
-            Delete Product
-          </button>
+              <h5 class="card-title">{{ product.title }}</h5>
 
+              <p class="text-muted small">
+                {{ product.description }}
+              </p>
+
+              <p><strong>Price:</strong> ₹{{ product.price }}</p>
+              <p><strong>Stock:</strong> {{ product.stock }}</p>
+
+              <p>
+                <strong>Categories:</strong>
+                @for (cat of product.categories; track cat) {
+                  <span class="badge bg-secondary me-1">
+                    {{ cat }}
+                  </span>
+                }
+              </p>
+
+              <label class="small">Update Status</label>
+
+              <select class="form-select form-select-sm mb-3"
+                      [(ngModel)]="product.status"
+                      (ngModelChange)="updateStatus(product, $event)"
+                      [ngModelOptions]="{ standalone: true }">
+
+                @for (status of productStatuses; track status) {
+                  <option [ngValue]="status">{{ status }}</option>
+                }
+
+              </select>
+
+              <input type="file"
+                     class="form-control form-control-sm mb-2"
+                     (change)="onFileSelected($event)">
+
+              <button class="btn btn-outline-primary btn-sm w-100 mb-2"
+                      (click)="addPhoto(product.productId)">
+                Upload Image
+              </button>
+
+              @for (img of product.images; track img.imageId) {
+                <button class="btn btn-outline-warning btn-sm w-100 mb-1"
+                        (click)="deleteImage(product.productId, img.imageId)">
+                  Delete Image #{{ img.imageId }}
+                </button>
+              }
+
+              <button class="btn btn-danger btn-sm w-100 mt-2"
+                      (click)="deleteProduct(product.productId)">
+                Delete Product
+              </button>
+
+            </div>
+          </div>
         </div>
-      </div>
+
+      }
 
     </div>
 
-    }
-
-  </div>
+  }
 
 </div>
+
