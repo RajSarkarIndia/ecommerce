@@ -23,8 +23,8 @@ export class ProductView implements OnInit {
 
   viewProduct(productId: number): void {
     this.http.get<ProductDTO>(
-      "http://localhost:8080/product/view/" + productId
-    ).subscribe({
+      "http://localhost:8080/product/view/" + productId)
+      .subscribe({
       next: (response) => {
         this.productResponse = response;
       },

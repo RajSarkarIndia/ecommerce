@@ -6,6 +6,7 @@ import {CommonModule} from '@angular/common';
 import {ProductStatus} from './Enum/ProductStatus';
 import {ProductCategory} from './Enum/ProductCategory';
 import {ProductDTO} from './DTO/product-Model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-product',
@@ -15,11 +16,11 @@ import {ProductDTO} from './DTO/product-Model';
   styleUrl: './product.css',
 })
 export class Product {
-showProducts: boolean=false;
+  showProducts: boolean = false;
 
   private http = inject(HttpClient);
-private cdr = inject(ChangeDetectorRef);
-
+  private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
 
   products: ProductDTO[] = [];
   selectedFile!: File;
@@ -38,19 +39,18 @@ private cdr = inject(ChangeDetectorRef);
   });
 
 
-
   loadProducts(): void {
     this.http.get<ProductDTO[]>(
       "http://localhost:8080/product/postedProducts",
       {withCredentials: true}
     ).subscribe({
       next: (data) => {
-this.products = [...data];
-this.showProducts=true;
-      this.cdr.detectChanges();   // 🔥 FORCE RENDER
-console.log("DATA RECEIVED:", data);
+        this.products = [...data];
+        this.showProducts = true;
+        this.cdr.detectChanges();   // 🔥 FORCE RENDER
+        console.log("DATA RECEIVED:", data);
 
-},
+      },
       error: (err) => console.error("Load failed", err)
     });
   }
@@ -145,7 +145,7 @@ console.log("DATA RECEIVED:", data);
 //buy product
   buyProduct(productId: number, quantity: number) {
     //place the order and show the pay now button
-    this.http.put<String>("http://localhost:8080/product/buy/" + productId + "/" + quantity,{}, {withCredentials: true})
+    this.http.put<String>("http://localhost:8080/product/buy/" + productId + "/" + quantity, {}, {withCredentials: true})
       .subscribe({
         next: (response) => {
           console.log("Order Placed Successfully\n" + response);
@@ -156,6 +156,12 @@ console.log("DATA RECEIVED:", data);
 
 
       });
+
+  }
+
+  viewProductRoute(productId: number): void {
+    this.router.navigate(['/product', productId]);
+
 
   }
 
