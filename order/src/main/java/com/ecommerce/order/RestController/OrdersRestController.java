@@ -37,6 +37,8 @@ public class OrdersRestController {
 
     Logger logger = Logger.getLogger("OrdersRestController.class");
 
+
+    //buy now
     @PostMapping("/create")
     @Transactional
     public ResponseEntity<String> createOrder(@RequestBody List<ProductInfoForBuying> products, @RequestHeader("Authorization") String authHeader) {

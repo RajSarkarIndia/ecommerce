@@ -2,6 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
 import {ProductDTO} from '../DTO/product-Model';
+import {CartService} from '../../cart/service/CartService';
 
 @Component({
   selector: 'app-product-view',
@@ -13,6 +14,7 @@ export class ProductView implements OnInit {
 
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
+  private cartService:CartService=inject(CartService);
 
   productResponse?: ProductDTO;
 
@@ -33,5 +35,11 @@ export class ProductView implements OnInit {
       }
     });
   }
+
+  addToCart(productId: number, quantity: number): void {
+    this.cartService.addToCart(productId, quantity);
+    alert("Added to cart");
+  }
+
 
 }

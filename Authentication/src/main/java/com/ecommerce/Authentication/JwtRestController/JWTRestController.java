@@ -72,11 +72,11 @@ public class JWTRestController {
 
     }
 
-    //get User Information
+
     //get User Information
     @GetMapping("/getUser")
     @Transactional(readOnly=true)
-    public ResponseEntity<User> getUserDeatils(@RequestHeader(name="Authorization"/*,required=false*/) String authHeader, HttpServletRequest request) {
+    public ResponseEntity<User> getUserDeatils(@RequestHeader(name="Authorization") String authHeader, HttpServletRequest request) {
 
         if (authHeader == null && request.getAttribute("Authorization")==null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
