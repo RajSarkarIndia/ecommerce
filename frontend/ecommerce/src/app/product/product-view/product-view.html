@@ -44,9 +44,6 @@
             SKU: {{ productResponse.sku }}
           </p>
 
-          <p>
-            {{ productResponse.description }}
-          </p>
 
           <h4 class="text-success">
             ₹ {{ productResponse.price }}
@@ -56,14 +53,10 @@
             <strong>Stock:</strong>
             {{ productResponse.stock }}
           </p>
-
-          <p>
-            <strong>Status:</strong>
-            <span class="badge bg-primary">
-                {{ productResponse.status }}
-              </span>
+          <div><p>Product Description:
+            {{ productResponse.description }}
           </p>
-
+          </div>
           <p>
             <strong>Categories:</strong>
             @for (cat of productResponse.categories; track cat) {
@@ -72,6 +65,10 @@
                 </span>
             }
           </p>
+
+          <button click="" class="btn btn-outline-primary">Add to cart</button>
+
+
         </div>
 
       </div>
