@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {Component, inject, signal} from '@angular/core';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,17 @@ import {RouterLink, RouterOutlet} from '@angular/router';
 })
 export class App {
   protected readonly title = signal('ecommerce');
+  cookieService:CookieService = inject(CookieService);
+  router:Router=inject(Router);
+
+  logout(){
+
+this.cookieService.delete("Authorization");
+this.router.navigate(["/login"]);
+
+
+  }
+
+
+
 }

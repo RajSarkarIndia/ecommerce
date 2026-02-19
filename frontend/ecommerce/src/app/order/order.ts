@@ -4,10 +4,11 @@ import {ProductInfoForBuying} from './DTO/ProductInfoForBuying';
 import {OrderResponse} from './DTO/OrderResponse';
 import {PaymentStatus} from './Enum/PaymentStatus';
 import {DeliveryStatus} from './Enum/DelhiveryStatus';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-order',
-  standalone: true,
+  imports:[CommonModule],
   templateUrl: './order.html',
   styleUrl: './order.css'
 })
@@ -15,7 +16,7 @@ export class Order implements OnInit {
 
   private httpClient = inject(HttpClient);
 
-  // ✅ EXPOSE ENUMS TO TEMPLATE
+
   PaymentStatus = PaymentStatus;
   DeliveryStatus = DeliveryStatus;
 
@@ -46,7 +47,7 @@ export class Order implements OnInit {
 
   loadOrders() {
     this.httpClient
-      .get<OrderResponse[]>("http://localhost:8080/order/myOrders")
+      .get<OrderResponse[]>("http://localhost:8080/order/myOrders",{withCredentials: true})
       .subscribe({
         next: (response) => {
           this.allOrder = response;
@@ -60,7 +61,7 @@ export class Order implements OnInit {
 
   getOrderDetails(orderId: number) {
     this.httpClient
-      .get<OrderResponse>("http://localhost:8080/order/viewOrder/" + orderId)
+      .get<OrderResponse>("http://localhost:8080/order/viewOrder/" + orderId,{withCredentials: true})
       .subscribe({
         next: (response) => {
           this.orderInfo = response;
@@ -74,7 +75,7 @@ export class Order implements OnInit {
 
   cancelOrder(orderId: number): void {
     this.httpClient
-      .delete<void>("http://localhost:8080/order/cancelOrder/" + orderId)
+      .delete<void>("http://localhost:8080/order/cancelOrder/" + orderId,{withCredentials: true})
       .subscribe({
         next: () => {
           console.log("Order cancelled");

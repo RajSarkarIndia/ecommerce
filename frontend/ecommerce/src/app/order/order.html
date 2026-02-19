@@ -79,7 +79,6 @@
 
 </div>
 
-
 <!-- ========================= -->
 <!-- ORDER DETAILS MODAL -->
 <!-- ========================= -->
@@ -116,7 +115,8 @@
 
         <div class="list-group mb-3">
 
-          @for (item of orderInfo.orderItems; track item.productId) {
+          @if (orderInfo.items) {
+          @for (item of orderInfo.items; track item.productId) {
 
           <div class="list-group-item d-flex justify-content-between align-items-center">
 
@@ -132,12 +132,15 @@
           </div>
 
           }
+          }
 
         </div>
 
         <!-- CANCEL BUTTON -->
-        @if (orderInfo.deliveryStatus !== DeliveryStatus.DELIVERED
-        && orderInfo.deliveryStatus !== DeliveryStatus.CANCELLED) {
+        @if (
+        orderInfo.deliveryStatus !== DeliveryStatus.DELIVERED &&
+        orderInfo.deliveryStatus !== DeliveryStatus.CANCELLED
+        ) {
 
         <button class="btn btn-danger w-100"
                 (click)="cancelOrder(orderInfo.orderId)"
