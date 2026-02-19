@@ -5,6 +5,7 @@ import { LoginForm } from './login-form';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService } from '../authentication-service';
 import { CookieService } from 'ngx-cookie-service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ export class Login {
   private httpClient = inject(HttpClient);
   private authenticationService = inject(AuthenticationService);
   private cookie = inject(CookieService);
+ private route:Router=inject(Router);
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -48,6 +50,7 @@ export class Login {
         });
 
         this.authenticationService.setAuthenticated(true);
+        this.route.navigate(["/profile"]);
       },
       error: (err) => {
         console.error("Login error:", err);

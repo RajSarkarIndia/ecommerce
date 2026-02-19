@@ -7,8 +7,10 @@ import {ProductView} from './product/product-view/product-view';
 import {Cart} from './cart/cart';
 import {Order} from './order/order';
 import {authenticationGuard} from './routeGuard/authentication-guard';
+import {Homepage} from './homepage/homepage';
 
 export const routes: Routes = [
+  {path:"",component:Homepage},
   {path:"login",component:Login,title:"Login"},
   {path:"register",component:Register,title:"Register"},
   {path:"profile",component:User,title:"Profile",canActivate: [authenticationGuard]},

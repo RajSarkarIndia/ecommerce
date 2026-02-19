@@ -1,1 +1,198 @@
-<p>homepage works!</p>
+<div class="container my-5">
+
+  <!-- HERO SECTION -->
+  <div class="text-center mb-5">
+    <h1 class="display-4 fw-bold">E-Commerce Microservices Application</h1>
+    <p class="lead">
+      Built with Spring Boot, Angular, PostgreSQL, Stripe and Google Cloud Storage
+    </p>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h3 class="card-title">Architecture Overview</h3>
+      <p>This project follows a microservices architecture.</p>
+
+      <ul>
+        <li>Angular Frontend</li>
+        <li>Spring Cloud Gateway</li>
+        <li>Eureka Service Discovery</li>
+        <li>Authentication Service (JWT Security)</li>
+        <li>Product Service (Google Cloud Storage Integration)</li>
+        <li>Order Service</li>
+        <li>Payment Service (Stripe Integration)</li>
+        <li>PostgreSQL Databases</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MICROSERVICES -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h3 class="card-title">Microservices</h3>
+
+      <h5 class="mt-3">Eureka Server</h5>
+      <p>Service registry where all microservices register themselves.</p>
+
+      <h5>Gateway Service</h5>
+      <p>Single entry point for all client requests. Handles routing and JWT validation.</p>
+
+      <h5>Authentication Service</h5>
+      <ul>
+        <li>User Registration</li>
+        <li>User Login</li>
+        <li>JWT Token Generation</li>
+        <li>User Profile Management</li>
+        <li>Address Management</li>
+      </ul>
+
+      <h5>Product Service</h5>
+      <ul>
+        <li>Create, Update and Delete Products</li>
+        <li>Fetch All Products</li>
+        <li>Category Filtering</li>
+        <li>Image Upload to Google Cloud Storage</li>
+        <li>Generate Signed Download URLs</li>
+      </ul>
+
+      <h5>Order Service</h5>
+      <ul>
+        <li>Create Orders</li>
+        <li>Store Order Items</li>
+        <li>Track Delivery Status</li>
+        <li>Track Payment Status</li>
+      </ul>
+
+      <h5>Payment Service</h5>
+      <ul>
+        <li>Stripe Payment Integration</li>
+        <li>Create Payment Session</li>
+        <li>Webhook Handling</li>
+        <li>Payment Status Tracking</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECURITY FLOW -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h3 class="card-title">Security Flow</h3>
+      <ol>
+        <li>User logs in using Authentication Service.</li>
+        <li>JWT token is generated.</li>
+        <li>Frontend stores the token.</li>
+        <li>Token is sent in Authorization header.</li>
+        <li>Gateway validates JWT before forwarding request.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- DATABASE -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h3 class="card-title">Database</h3>
+      <p>Each microservice uses PostgreSQL.</p>
+
+      <pre class="bg-light p-3 rounded">
+spring.datasource.username=YOUR_DB_USERNAME
+spring.datasource.password=YOUR_DB_PASSWORD
+      </pre>
+    </div>
+  </div>
+
+  <!-- ENVIRONMENT VARIABLES -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h3 class="card-title">Environment Configuration (.env)</h3>
+
+      <pre class="bg-light p-3 rounded">
+export ProjectId=YOUR_PROJECT_ID
+export BucketName=YOUR_BUCKET_NAME
+export dbUsername=postgres
+export dbPassword=YOUR_DB_PASSWORD
+
+export stripeKey=YOUR_STRIPE_SECRET_KEY
+export webhookSecret=YOUR_WEBHOOK_SECRET
+      </pre>
+
+      <h5 class="mt-4">Variable Usage</h5>
+
+      <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+          <tr>
+            <th>Variable</th>
+            <th>Used By</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ProjectId</td>
+            <td>Product Service</td>
+            <td>Google Cloud Project ID</td>
+          </tr>
+          <tr>
+            <td>BucketName</td>
+            <td>Product Service</td>
+            <td>Google Cloud Storage Bucket</td>
+          </tr>
+          <tr>
+            <td>dbUsername</td>
+            <td>All Services</td>
+            <td>Database Username</td>
+          </tr>
+          <tr>
+            <td>dbPassword</td>
+            <td>All Services</td>
+            <td>Database Password</td>
+          </tr>
+          <tr>
+            <td>stripeKey</td>
+            <td>Payment Service</td>
+            <td>Stripe Secret Key</td>
+          </tr>
+          <tr>
+            <td>webhookSecret</td>
+            <td>Payment Service</td>
+            <td>Stripe Webhook Verification Secret</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h3 class="card-title">Technology Stack</h3>
+      <ul>
+        <li>Spring Boot</li>
+        <li>Spring Security with JWT</li>
+        <li>Spring Cloud Gateway</li>
+        <li>Eureka Service Discovery</li>
+        <li>Feign Client</li>
+        <li>PostgreSQL</li>
+        <li>Stripe API</li>
+        <li>Google Cloud Storage with Signed URLs</li>
+        <li>Angular Standalone Components</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FUTURE IMPROVEMENTS -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title">Future Improvements</h3>
+      <ul>
+        <li>Admin Dashboard</li>
+        <li>Role-Based Authorization</li>
+        <li>Order Cancellation</li>
+        <li>Product Reviews</li>
+        <li>Docker and Kubernetes Deployment</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
