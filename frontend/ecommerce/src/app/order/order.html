@@ -1,118 +1,157 @@
-<div class="container mt-4">
+<div class="container mt-5">
 
-  <h3 class="mb-4">My Orders</h3>
+  <h2 class="mb-4 text-center">My Orders</h2>
 
+  <!-- ========================= -->
+  <!-- NO ORDERS -->
+  <!-- ========================= -->
   @if (!allOrder || allOrder.length === 0) {
-  <div class="alert alert-info">
-    No Orders Found
+  <div class="alert alert-info text-center">
+    You have not placed any orders yet.
   </div>
   }
 
-  @for (order of allOrder; track order.orderId) {
+  <!-- ========================= -->
+  <!-- ORDER LIST -->
+  <!-- ========================= -->
+  @if (allOrder && allOrder.length > 0) {
 
-  <div class="card mb-3 shadow-sm">
+  <div class="row">
 
-    <!-- HEADER -->
-    <div class="card-header d-flex justify-content-between">
-        <span>
-          <strong>Order #{{ order.orderId }}</strong>
-        </span>
-      <span class="fw-bold">
-          ₹ {{ order.totalAmount }}
-        </span>
+    @for (order of allOrder; track order.orderId) {
+
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm">
+
+        <div class="card-body">
+
+          <h5 class="card-title">
+            Order #{{ order.orderId }}
+          </h5>
+
+          <p class="mb-1">
+            <strong>Total:</strong> ₹{{ order.totalAmount }}
+          </p>
+
+          <p class="mb-1">
+            <strong>Placed:</strong>
+            {{ order.placedAt }}
+          </p>
+
+          <!-- PAYMENT STATUS -->
+          <p>
+            <strong>Payment:</strong>
+            <span class="badge"
+                  [ngClass]="{
+                        'bg-success': order.paymentStatus === PaymentStatus.SUCCESS,
+                        'bg-warning': order.paymentStatus === PaymentStatus.PENDING,
+                        'bg-danger': order.paymentStatus === PaymentStatus.FAILED
+                      }">
+                  {{ order.paymentStatus }}
+                </span>
+          </p>
+
+          <!-- DELIVERY STATUS -->
+          <p>
+            <strong>Delivery:</strong>
+            <span class="badge bg-primary">
+                  {{ order.deliveryStatus }}
+                </span>
+          </p>
+
+          <button class="btn btn-outline-dark btn-sm w-100"
+                  data-bs-toggle="modal"
+                  data-bs-target="#orderModal"
+                  (click)="getOrderDetails(order.orderId)">
+            View Details
+          </button>
+
+        </div>
+
+      </div>
     </div>
 
-    <div class="card-body">
+    }
 
-      <!-- PAYMENT STATUS -->
-      <p>
-        <strong>Payment:</strong>
+  </div>
 
-        @if (order.paymentStatus === PaymentStatus.PENDING) {
-        <span class="badge bg-warning text-dark">
-              PENDING
-            </span>
-        }
-        @else if (order.paymentStatus === PaymentStatus.SUCCESS) {
-        <span class="badge bg-success">
-              SUCCESS
-            </span>
-        }
-        @else if (order.paymentStatus === PaymentStatus.FAILED) {
-        <span class="badge bg-danger">
-              FAILED
-            </span>
-        }
-        @else {
-        <span class="badge bg-secondary">
-              {{ order.paymentStatus }}
-            </span>
-        }
+  }
 
-      </p>
+</div>
 
-      <!-- DELIVERY STATUS -->
-      <p>
-        <strong>Delivery:</strong>
-        <span class="badge bg-info text-dark">
-            {{ order.deliveryStatus }}
-          </span>
-      </p>
 
-      <!-- ACTION BUTTONS -->
-      <div class="mb-2">
+<!-- ========================= -->
+<!-- ORDER DETAILS MODAL -->
+<!-- ========================= -->
 
-        <button
-          class="btn btn-sm btn-outline-primary me-2"
-          (click)="getOrderDetails(order.orderId)">
-          View Details
+<div class="modal fade"
+     id="orderModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">
+          Order Details
+        </h5>
+        <button type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal">
         </button>
+      </div>
 
-        @if (
-        order.deliveryStatus !== DeliveryStatus.DELIVERED &&
-        order.deliveryStatus !== DeliveryStatus.CANCELLED
-        ) {
-        <button
-          class="btn btn-sm btn-outline-danger"
-          (click)="cancelOrder(order.orderId)">
+      <div class="modal-body">
+
+        @if (orderInfo) {
+
+        <p><strong>Order ID:</strong> {{ orderInfo.orderId }}</p>
+        <p><strong>Total Amount:</strong> ₹{{ orderInfo.totalAmount }}</p>
+        <p><strong>Placed At:</strong> {{ orderInfo.placedAt }}</p>
+
+        <hr>
+
+        <h6>Items</h6>
+
+        <div class="list-group mb-3">
+
+          @for (item of orderInfo.orderItems; track item.productId) {
+
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+
+            <div>
+              <strong>Product ID:</strong> {{ item.productId }} <br>
+              Quantity: {{ item.quantity }}
+            </div>
+
+            <div>
+              ₹{{ item.unitPrice }}
+            </div>
+
+          </div>
+
+          }
+
+        </div>
+
+        <!-- CANCEL BUTTON -->
+        @if (orderInfo.deliveryStatus !== DeliveryStatus.DELIVERED
+        && orderInfo.deliveryStatus !== DeliveryStatus.CANCELLED) {
+
+        <button class="btn btn-danger w-100"
+                (click)="cancelOrder(orderInfo.orderId)"
+                data-bs-dismiss="modal">
           Cancel Order
         </button>
+
+        }
+
         }
 
       </div>
 
-      <!-- ORDER DETAILS -->
-      @if (orderInfo && orderInfo.orderId === order.orderId) {
-
-      <hr>
-
-      <h6>Items</h6>
-
-      @for (item of orderInfo.items; track item.productId) {
-
-      <div class="d-flex justify-content-between border-bottom py-2">
-
-              <span>
-                Product ID: {{ item.productId }}
-              </span>
-
-        <span>
-                Qty: {{ item.quantity }}
-              </span>
-
-        <span>
-                ₹ {{ item.unitPrice }}
-              </span>
-
-      </div>
-
-      }
-
-      }
     </div>
-
   </div>
-
-  }
 
 </div>

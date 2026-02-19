@@ -82,33 +82,39 @@ export class Cart implements OnInit {
   // CHECKOUT (COOKIE AUTH)
   // ---------------------------
 
-  checkout() {
+checkout() {
 
-    if (!this.selectedAddressId) {
-      alert("Please select address");
-      return;
-    }
-
-    const orderPayload = this.cartItems.map(item => ({
-      productId: item.productId,
-      quantity: item.quantity,
-      addressId: this.selectedAddressId
-    }));
-
-    this.http.post(
-      "http://localhost:8080/order/create",
-      orderPayload,
-      { withCredentials: true }   // ✅ send cookie
-    ).subscribe({
-      next: (paymentUrl: any) => {
-        this.cartService.clearCart();
-        window.location.href = paymentUrl;  // redirect to payment
-      },
-      error: (err) => {
-        console.log(err);
-        alert("Order failed!");
-      }
-    });
+  if (!this.selectedAddressId) {
+    alert("Please select address");
+    return;
   }
+
+  const token = localStorage.getItem("token");
+
+  const orderPayload = this.cartItems.map(item => ({
+    productId: item.productId,
+    quantity: item.quantity,
+    addressId: this.selectedAddressId
+  }));
+
+  this.http.post<{ paymentUrl: string }>(
+    "http://localhost:8080/order/create",
+    orderPayload,
+    {
+      withCredentials: true
+    }
+  ).subscribe({
+    next: (response) => {
+      window.location.href = response.paymentUrl;
+    },
+    error: (err) => {
+      console.log(err);
+      alert("Order failed!");
+    }
+  });
+}
+
+
+
 }
 

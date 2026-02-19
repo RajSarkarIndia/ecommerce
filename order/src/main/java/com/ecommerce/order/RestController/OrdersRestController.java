@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/order")
@@ -41,25 +43,25 @@ public class OrdersRestController {
     //buy now
     @PostMapping("/create")
     @Transactional
-    public ResponseEntity<String> createOrder(@RequestBody List<ProductInfoForBuying> products, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<Map<String,String>> createOrder(@RequestBody List<ProductInfoForBuying> products, @RequestHeader("Authorization") String authHeader) {
         try {
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 return ResponseEntity.status(401)
-                        .body("Missing or invalid Authorization header");
+                        .body(Map.of("error","Missing or invalid Authorization header"));
             }
 
             String jwt = authHeader.substring(7);
 
             if (!jwtUtil.validateToken(jwt)) {
                 return ResponseEntity.status(401)
-                        .body("Invalid Token");
+                        .body(Map.of("error","Invalid Token"));
             }
 
             Claims userInfo = jwtUtil.extractAllClaims(jwt);
             Integer userId = userInfo.get("userId", Integer.class);
 
             if (products == null || products.isEmpty())
-                return ResponseEntity.badRequest().body("Product list cannot be empty");
+                return ResponseEntity.badRequest().body(Map.of("error","Product list cannot be empty"));
 
             Order order = new Order();
             order.setUserId(userId);
@@ -90,13 +92,13 @@ public class OrdersRestController {
 
             String paymentUrl = paymentAPI.createSessionUrl(new PaymentDTO(null, order.getOrderId(), null, order.getTotalAmount()));
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(paymentUrl);
+                                 .body(Map.of("paymentUrl", paymentUrl));
 
 
         } catch (Exception e) {
             logger.info("Exception in \"create\" endpoint" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Something went wrong");
+                    .body(Map.of("error","Something went wrong"));
         }
 
     }

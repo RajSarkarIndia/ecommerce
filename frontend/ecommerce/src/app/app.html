@@ -1,35 +1,93 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container">
+
+    <!-- BRAND -->
+    <a class="navbar-brand fw-bold" routerLink="/">
+      🛒 E-Commerce
+    </a>
+
+    <!-- TOGGLER -->
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContent">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+
+      <!-- LEFT SIDE -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Account Related
+          <a class="nav-link" routerLink="/" routerLinkActive="active">
+            Home
           </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" routerLink="/profile">Profile</a></li>
-            <li><a class="dropdown-item" routerLink="/orders">Orders</a></li>
+        </li>
+
+        <!-- ACCOUNT DROPDOWN -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+             role="button"
+             data-bs-toggle="dropdown">
+            Account
+          </a>
+
+          <ul class="dropdown-menu shadow">
+
+            <li>
+              <a class="dropdown-item" routerLink="/profile">
+                Profile
+              </a>
+            </li>
+
+            <li>
+              <a class="dropdown-item" routerLink="/order">
+                My Orders
+              </a>
+            </li>
+
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" routerLink="/logout">Logout</a></li>
+
+            <li>
+              <a class="dropdown-item text-danger" routerLink="/logout">
+                Logout
+              </a>
+            </li>
+
           </ul>
         </li>
-        <li><a class="btn btn-outline-dark"
-                routerLink="/cart">
-          Cart
-        </a>
-        </li>
+
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+
+      <!-- RIGHT SIDE -->
+      <div class="d-flex align-items-center gap-3">
+
+        <!-- SEARCH -->
+        <form class="d-flex">
+          <input class="form-control me-2"
+                 type="search"
+                 placeholder="Search products">
+          <button class="btn btn-outline-light" type="submit">
+            Search
+          </button>
+        </form>
+
+        <!-- CART BUTTON -->
+        <a class="btn btn-outline-light position-relative"
+           routerLink="/cart">
+
+          Cart
+
+          <!-- OPTIONAL CART BADGE -->
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            0
+          </span>
+
+        </a>
+
+      </div>
+
     </div>
   </div>
 </nav>

@@ -25,7 +25,20 @@ export class Order implements OnInit {
   // =========================
   // CREATE ORDER (Buy Now)
   // =========================
-buyNow(productsForPurchasing: ProductInfoForBuying[]) { this.httpClient.post<string>( 'http://localhost:8080/order/create', productsForPurchasing ).subscribe({ next: (response: string) => { console.log("Order created successfully"); window.location.href = response; }, error: (error: any) => { console.error("Order failed:", error); } }); }
+  buyNow(productsForPurchasing: ProductInfoForBuying[]) {
+    this.httpClient.post<{ paymentUrl: string }>(
+  'http://localhost:8080/order/create',
+  productsForPurchasing,
+  { withCredentials: true }
+).subscribe({
+  next: (response) => {
+    window.location.href = response.paymentUrl;
+  },
+  error: (error) => {
+    console.error(error);
+  }
+});
+  }
 
   ngOnInit() {
     this.loadOrders();
