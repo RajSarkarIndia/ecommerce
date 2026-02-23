@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { LoginForm } from './login-form';
@@ -10,7 +11,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [RouterLink,CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
@@ -49,7 +50,6 @@ export class Login {
           path: '/'
         });
 
-        this.authenticationService.setAuthenticated(true);
         this.route.navigate(["/profile"]);
       },
       error: (err) => {

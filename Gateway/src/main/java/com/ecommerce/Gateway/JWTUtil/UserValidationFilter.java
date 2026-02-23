@@ -31,7 +31,8 @@ public class UserValidationFilter extends OncePerRequestFilter {
         if (url.equals("/login") ||
                 url.equals("/user/register") ||
                 url.startsWith("/product/view/") ||
-                url.startsWith("/payment/webhook")    ) {
+                url.startsWith("/payment/webhook") ||
+                 url.startsWith("/product/all")   ) {
 
             filterChain.doFilter(httpRequest, httpResponse);
             return;

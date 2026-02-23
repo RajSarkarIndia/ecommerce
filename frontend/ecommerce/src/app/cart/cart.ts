@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -17,6 +17,7 @@ export class Cart implements OnInit {
 
   private cartService = inject(CartService);
   private http = inject(HttpClient);
+  private cdr = inject(ChangeDetectorRef);
 
   cartItems: CartItem[] = [];
   userDetails?: UserInfo;   // optional for strict mode
@@ -33,6 +34,7 @@ export class Cart implements OnInit {
 
   loadCart() {
     this.cartItems = this.cartService.getCart();
+this.cdr.detectChanges();
   }
 
   increase(productId: number) {
@@ -63,7 +65,7 @@ export class Cart implements OnInit {
   fetchUser() {
     this.http.get<UserInfo>(
       "http://localhost:8080/getUser",
-      { withCredentials: true }   // ✅ send cookie
+      { withCredentials: true }   
     ).subscribe({
       next: (data) => {
         this.userDetails = data;
@@ -71,8 +73,12 @@ export class Cart implements OnInit {
         if (data.addresses && data.addresses.length > 0) {
           this.selectedAddressId = data.addresses[0].id;
         }
+     this.cdr.detectChanges();
+
       },
       error: (err) => {
+alert("Please Login to proceed");
+
         console.log(err);
       }
     });

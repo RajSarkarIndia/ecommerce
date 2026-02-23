@@ -56,7 +56,7 @@
                     formControlName="status">
 
               @for (status of productStatuses; track status) {
-                <option [ngValue]="status">{{ status }}</option>
+              <option [ngValue]="status">{{ status }}</option>
               }
 
             </select>
@@ -70,7 +70,7 @@
                   multiple>
 
             @for (cat of categoryOptions; track cat) {
-              <option [ngValue]="cat">{{ cat }}</option>
+            <option [ngValue]="cat">{{ cat }}</option>
             }
 
           </select>
@@ -93,96 +93,148 @@
 
   @if (!showProducts) {
 
-    <div class="text-center mb-4">
-      <button class="btn btn-dark"
-              (click)="loadProducts()">
-        View My Products
-      </button>
-    </div>
+  <div class="text-center mb-4">
+    <button class="btn btn-dark"
+            (click)="loadProducts()">
+      View My Products
+    </button>
+  </div>
 
   } @else {
 
-    <div class="row">
+  <div class="row">
 
-      @for (product of products; track product.productId) {
+    @for (product of products; track product.productId) {
 
-        <div class="col-md-4 mb-4">
-          <div class="card h-100 shadow-sm">
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
 
-            @if (product.images.length > 0) {
-              <img [src]="product.images[0].url"
-                   class="card-img-top"
-                   style="height:200px; object-fit:cover;">
-            } @else {
-              <img src="https://via.placeholder.com/300"
-                   class="card-img-top"
-                   style="height:200px; object-fit:cover;">
-            }
+        @if (product.images.length > 0) {
+        <img [src]="product.images[0].url"
+             class="card-img-top"
+             style="height:200px; object-fit:cover;">
+        } @else {
+        <img src="https://via.placeholder.com/300"
+             class="card-img-top"
+             style="height:200px; object-fit:cover;">
+        }
 
-            <div class="card-body">
+        <div class="card-body">
 
-              <h5 class="card-title">{{ product.title }}</h5>
+          <!-- TITLE -->
+          @if (editingProductId === product.productId) {
+          <input class="form-control mb-2"
+                 [(ngModel)]="product.title">
+          } @else {
+          <h5 class="card-title">{{ product.title }}</h5>
+          }
 
-              <p class="text-muted small">
-                {{ product.description }}
-              </p>
+          <!-- DESCRIPTION -->
+          @if (editingProductId === product.productId) {
+          <textarea class="form-control mb-2"
+                    [(ngModel)]="product.description">
+                </textarea>
+          } @else {
+          <p class="text-muted small">
+            {{ product.description }}
+          </p>
+          }
 
-              <p><strong>Price:</strong> ₹{{ product.price }}</p>
-              <p><strong>Stock:</strong> {{ product.stock }}</p>
+          <!-- PRICE -->
+          @if (editingProductId === product.productId) {
+          <input type="number"
+                 class="form-control mb-2"
+                 [(ngModel)]="product.price">
+          } @else {
+          <p><strong>Price:</strong> ₹{{ product.price }}</p>
+          }
 
-              <p>
-                <strong>Categories:</strong>
-                @for (cat of product.categories; track cat) {
-                  <span class="badge bg-secondary me-1">
+          <!-- STOCK -->
+          @if (editingProductId === product.productId) {
+          <input type="number"
+                 class="form-control mb-2"
+                 [(ngModel)]="product.stock">
+          } @else {
+          <p><strong>Stock:</strong> {{ product.stock }}</p>
+          }
+
+          <p>
+            <strong>Categories:</strong>
+            @for (cat of product.categories; track cat) {
+            <span class="badge bg-secondary me-1">
                     {{ cat }}
                   </span>
-                }
-              </p>
+            }
+          </p>
 
-              <label class="small">Update Status</label>
+          <label class="small">Update Status</label>
 
-              <select class="form-select form-select-sm mb-3"
-                      [(ngModel)]="product.status"
-                      (ngModelChange)="updateStatus(product, $event)"
-                      [ngModelOptions]="{ standalone: true }">
+          <select class="form-select form-select-sm mb-3"
+                  [(ngModel)]="product.status"
+                  (ngModelChange)="updateStatus(product, $event)">
 
-                @for (status of productStatuses; track status) {
-                  <option [ngValue]="status">{{ status }}</option>
-                }
+            @for (status of productStatuses; track status) {
+            <option [ngValue]="status">{{ status }}</option>
+            }
 
-              </select>
+          </select>
 
-              <input type="file"
-                     class="form-control form-control-sm mb-2"
-                     (change)="onFileSelected($event)">
+          <!-- EDIT BUTTONS -->
+          @if (editingProductId === product.productId) {
 
-              <button class="btn btn-outline-primary btn-sm w-100 mb-2"
-                      (click)="addPhoto(product.productId)">
-                Upload Image
-              </button>
+          <button class="btn btn-success btn-sm w-100 mt-2"
+                  (click)="updateProduct(product)">
+            Save Update
+          </button>
 
-              @for (img of product.images; track img.imageId) {
-                <button class="btn btn-outline-warning btn-sm w-100 mb-1"
-                        (click)="deleteImage(product.productId, img.imageId)">
-                  Delete Image #{{ img.imageId }}
-                </button>
-              }
-              <button class="btn btn-info btn-sm w-100 mt-2" (click)="viewProductRoute(product.productId)">View Product</button>
+          <button class="btn btn-secondary btn-sm w-100 mt-2"
+                  (click)="editingProductId = null">
+            Cancel
+          </button>
 
-              <button class="btn btn-danger btn-sm w-100 mt-2"
-                      (click)="deleteProduct(product.productId)">
-                Delete Product
-              </button>
+          } @else {
 
-            </div>
-          </div>
+          <button class="btn btn-warning btn-sm w-100 mt-2"
+                  (click)="editingProductId = product.productId">
+            Edit Product
+          </button>
+
+          }
+
+          <input type="file"
+                 class="form-control form-control-sm mb-2"
+                 (change)="onFileSelected($event)">
+
+          <button class="btn btn-outline-primary btn-sm w-100 mb-2"
+                  (click)="addPhoto(product.productId)">
+            Upload Image
+          </button>
+
+          @for (img of product.images; track img.imageId) {
+          <button class="btn btn-outline-warning btn-sm w-100 mb-1"
+                  (click)="deleteImage(product.productId, img.imageId)">
+            Delete Image #{{ img.imageId }}
+          </button>
+          }
+
+          <button class="btn btn-info btn-sm w-100 mt-2"
+                  (click)="viewProductRoute(product.productId)">
+            View Product
+          </button>
+
+          <button class="btn btn-danger btn-sm w-100 mt-2"
+                  (click)="deleteProduct(product.productId)">
+            Delete Product
+          </button>
+
         </div>
-
-      }
-
+      </div>
     </div>
+
+    }
+
+  </div>
 
   }
 
 </div>
-

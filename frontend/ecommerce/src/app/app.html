@@ -25,66 +25,62 @@
           </a>
         </li>
 
-        <!-- ACCOUNT DROPDOWN -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle"
-             role="button"
-             data-bs-toggle="dropdown">
-            Account
-          </a>
+        @if (isAuthenticated()) {
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle"
+               role="button"
+               data-bs-toggle="dropdown">
+              Account
+            </a>
 
-          <ul class="dropdown-menu shadow">
+            <ul class="dropdown-menu shadow">
+              <li>
+                <a class="dropdown-item" routerLink="/profile">
+                  Profile
+                </a>
+              </li>
 
-            <li>
-              <a class="dropdown-item" routerLink="/profile">
-                Profile
-              </a>
-            </li>
+              <li>
+                <a class="dropdown-item" routerLink="/order">
+                  My Orders
+                </a>
+              </li>
 
-            <li>
-              <a class="dropdown-item" routerLink="/order">
-                My Orders
-              </a>
-            </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
 
-            <li><hr class="dropdown-divider"></li>
-
-            <li>
-              <a class="dropdown-item text-danger" (click)="logout()">
-                Logout
-              </a>
-
-            </li>
-
-          </ul>
-        </li>
+              <li>
+                <a class="dropdown-item text-danger"
+                   (click)="logout()">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+        }
 
       </ul>
 
       <!-- RIGHT SIDE -->
       <div class="d-flex align-items-center gap-3">
 
-        <!-- SEARCH -->
-        <form class="d-flex">
-          <input class="form-control me-2"
-                 type="search"
-                 placeholder="Search products">
-          <button class="btn btn-outline-light" type="submit">
-            Search
-          </button>
-        </form>
+        @if (!isAuthenticated()) {
+          <a class="btn btn-outline-light"
+             routerLink="/login">
+            Login
+          </a>
+
+          <a class="btn btn-outline-light"
+             routerLink="/register">
+            Register
+          </a>
+        }
 
         <!-- CART BUTTON -->
-        <a class="btn btn-outline-light position-relative"
+        <a class="btn btn-outline-light"
            routerLink="/cart">
-
           Cart
-
-          <!-- OPTIONAL CART BADGE -->
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            0
-          </span>
-
         </a>
 
       </div>

@@ -18,15 +18,74 @@
       <div class="col-md-6">
 
         @if (productResponse.images.length > 0) {
-        <img
-          [src]="productResponse.images[0].url"
-          class="img-fluid rounded-start"
-          style="height:400px; object-fit:cover;">
+
+        <div id="productCarousel" class="carousel slide">
+
+          <!-- Indicators -->
+          <div class="carousel-indicators">
+            @for (img of productResponse.images; track img; let i = $index) {
+              <button
+                type="button"
+                data-bs-target="#productCarousel"
+                [attr.data-bs-slide-to]="i"
+                [class.active]="i === 0"
+                [attr.aria-current]="i === 0 ? 'true' : null">
+              </button>
+            }
+          </div>
+
+          <!-- Images -->
+          <div class="carousel-inner">
+            @for (img of productResponse.images; track img; let i = $index) {
+              <div
+                class="carousel-item"
+                [class.active]="i === 0">
+
+                <img
+                  [src]="img.url"
+                  class="d-block w-100"
+                  style="height:400px; object-fit:cover;">
+              </div>
+            }
+          </div>
+
+          <!-- Previous Button -->
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#productCarousel"
+            data-bs-slide="prev">
+
+            <span class="bg-dark bg-opacity-75 rounded-circle d-flex justify-content-center align-items-center"
+                  style="width:50px;height:50px;">
+              <span class="carousel-control-prev-icon"></span>
+            </span>
+
+          </button>
+
+          <!-- Next Button -->
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#productCarousel"
+            data-bs-slide="next">
+
+            <span class="bg-dark bg-opacity-75 rounded-circle d-flex justify-content-center align-items-center"
+                  style="width:50px;height:50px;">
+              <span class="carousel-control-next-icon"></span>
+            </span>
+
+          </button>
+
+        </div>
+
         } @else {
+
         <img
           src="https://via.placeholder.com/500"
           class="img-fluid rounded-start"
           style="height:400px; object-fit:cover;">
+
         }
 
       </div>
@@ -44,34 +103,36 @@
             SKU: {{ productResponse.sku }}
           </p>
 
-
           <h4 class="text-success">
-            ₹ {{ productResponse.price }}
+            $ {{ productResponse.price }}
           </h4>
 
           <p>
             <strong>Stock:</strong>
             {{ productResponse.stock }}
           </p>
-          <div><p>Product Description:
-            {{ productResponse.description }}
-          </p>
+
+          <div>
+            <p>
+              <strong>Product Description:</strong><br>
+              {{ productResponse.description }}
+            </p>
           </div>
+
           <p>
             <strong>Categories:</strong>
             @for (cat of productResponse.categories; track cat) {
-            <span class="badge bg-secondary me-1">
-                  {{ cat }}
-                </span>
+              <span class="badge bg-secondary me-1">
+                {{ cat }}
+              </span>
             }
           </p>
 
           <button
             (click)="addToCart(productResponse.productId, 1)"
             class="btn btn-outline-primary">
-            Add to cart
+            Add to Cart
           </button>
-
 
         </div>
 

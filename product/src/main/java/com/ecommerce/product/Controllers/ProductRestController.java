@@ -333,27 +333,8 @@ public class ProductRestController {
     @GetMapping("/productCategory/{category}")
     @Transactional(readOnly = true)
     public ResponseEntity<List<ProductResponse>> productCatrgory(
-            @PathVariable ProductCategory category,
-            @RequestHeader("Authorization") String authHeader) {
+            @PathVariable ProductCategory category){
 
-        try {
-
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
-
-            String jwt = authHeader.substring(7);
-
-            if (!jwtUtil.validateToken(jwt)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
-
-            Claims userInfo = jwtUtil.extractAllClaims(jwt);
-            String role = userInfo.get("role", String.class);
-
-            if (!role.equals("ROLE_SELLER")) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
 
             List<Product> allProductOfCategory =
                     productRepository.findAllByCategories(category);
@@ -367,9 +348,6 @@ public class ProductRestController {
 
             return ResponseEntity.status(HttpStatus.OK).body(responseList);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
     }
 //view Product
     @GetMapping("/view/{productId}")
@@ -418,6 +396,26 @@ public class ProductRestController {
 
         return ResponseEntity.ok(response);
     }
+
+    //fetch all product
+    @GetMapping("all")
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ProductResponse>> allProduct(){
+        List<Product> allProduct=productRepository.findAll();
+        List<ProductResponse>allProductResponse=new ArrayList<>();
+        for(Product product:allProduct){
+           ProductResponse productResponse= productProductResponseMapperClass.mapIt(product);
+           allProductResponse.add(productResponse);
+        }
+return ResponseEntity.status(HttpStatus.OK)
+        .body(allProductResponse);
+
+    }
+
+
+
+
+
 
 }
 

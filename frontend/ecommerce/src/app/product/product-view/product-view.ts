@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef,Component, inject, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
 import {ProductDTO} from '../DTO/product-Model';
@@ -15,6 +15,7 @@ export class ProductView implements OnInit {
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
   private cartService:CartService=inject(CartService);
+  private cdr = inject(ChangeDetectorRef);
 
   productResponse?: ProductDTO;
 
@@ -29,6 +30,7 @@ export class ProductView implements OnInit {
       .subscribe({
       next: (response) => {
         this.productResponse = response;
+  this.cdr.detectChanges();
       },
       error: (error) => {
         console.log(error);

@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ProductInfoForBuying} from './DTO/ProductInfoForBuying';
 import {OrderResponse} from './DTO/OrderResponse';
@@ -15,6 +15,8 @@ import {CommonModule} from '@angular/common';
 export class Order implements OnInit {
 
   private httpClient = inject(HttpClient);
+  private cdr = inject(ChangeDetectorRef);
+
 
 
   PaymentStatus = PaymentStatus;
@@ -52,6 +54,8 @@ export class Order implements OnInit {
         next: (response) => {
           this.allOrder = response;
           console.log("All orders fetched");
+          this.cdr.detectChanges();
+
         },
         error: (error) => {
           console.log(error);

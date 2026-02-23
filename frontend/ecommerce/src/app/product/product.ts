@@ -17,6 +17,7 @@ import {Router} from '@angular/router';
 })
 export class Product {
   showProducts: boolean = false;
+  editingProductId: number | null = null;
 
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
@@ -47,7 +48,7 @@ export class Product {
       next: (data) => {
         this.products = [...data];
         this.showProducts = true;
-        this.cdr.detectChanges();   // 🔥 FORCE RENDER
+        this.cdr.detectChanges();
         console.log("DATA RECEIVED:", data);
 
       },
@@ -139,6 +140,23 @@ export class Product {
     ).subscribe({
       next: () => product.status = newStatus,
       error: (err) => console.error("Status update failed", err)
+    });
+  }
+
+
+  updateProduct(product: ProductDTO): void {
+
+    this.http.put(
+      "http://localhost:8080/product/update/" + product.productId,
+      product,
+      { withCredentials: true }
+    ).subscribe({
+      next: () => {
+        console.log("Product updated successfully");
+        this.editingProductId = null;
+        this.loadProducts();
+      },
+      error: (err) => console.error("Update failed", err)
     });
   }
 

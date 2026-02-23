@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserInfo } from './user-info';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ import {CommonModule} from '@angular/common';
 export class User implements OnInit {
 
   private http = inject(HttpClient);
+  private cdr = inject(ChangeDetectorRef);
   edit: boolean = true;
 
   userInfo?: UserInfo;
@@ -30,6 +31,7 @@ export class User implements OnInit {
     }).subscribe(response => {
       this.userInfo = response;
       this.addresses = response.addresses ?? [];
+      this.cdr.detectChanges();
 
       this.userForm.patchValue({
         name: response.name,

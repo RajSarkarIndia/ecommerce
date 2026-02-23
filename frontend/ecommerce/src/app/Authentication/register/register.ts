@@ -1,4 +1,5 @@
 import {Component, inject} from '@angular/core';
+import { RouterLink } from '@angular/router';
 import {Form, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {User} from './user';
 import {HttpClient} from '@angular/common/http';
@@ -6,7 +7,7 @@ import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [RouterLink,CommonModule, ReactiveFormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })

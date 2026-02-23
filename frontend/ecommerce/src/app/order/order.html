@@ -2,18 +2,12 @@
 
   <h2 class="mb-4 text-center">My Orders</h2>
 
-  <!-- ========================= -->
-  <!-- NO ORDERS -->
-  <!-- ========================= -->
   @if (!allOrder || allOrder.length === 0) {
   <div class="alert alert-info text-center">
     You have not placed any orders yet.
   </div>
   }
 
-  <!-- ========================= -->
-  <!-- ORDER LIST -->
-  <!-- ========================= -->
   @if (allOrder && allOrder.length > 0) {
 
   <div class="row">
@@ -22,7 +16,6 @@
 
     <div class="col-md-6 mb-4">
       <div class="card shadow-sm">
-
         <div class="card-body">
 
           <h5 class="card-title">
@@ -38,25 +31,17 @@
             {{ order.placedAt }}
           </p>
 
-          <!-- PAYMENT STATUS -->
           <p>
             <strong>Payment:</strong>
-            <span class="badge"
-                  [ngClass]="{
-                        'bg-success': order.paymentStatus === PaymentStatus.SUCCESS,
-                        'bg-warning': order.paymentStatus === PaymentStatus.PENDING,
-                        'bg-danger': order.paymentStatus === PaymentStatus.FAILED
-                      }">
-                  {{ order.paymentStatus }}
-                </span>
+              {{ order.paymentStatus }}
+       
           </p>
 
-          <!-- DELIVERY STATUS -->
           <p>
             <strong>Delivery:</strong>
             <span class="badge bg-primary">
-                  {{ order.deliveryStatus }}
-                </span>
+              {{ order.deliveryStatus }}
+            </span>
           </p>
 
           <button class="btn btn-outline-dark btn-sm w-100"
@@ -67,7 +52,6 @@
           </button>
 
         </div>
-
       </div>
     </div>
 
@@ -119,16 +103,13 @@
           @for (item of orderInfo.items; track item.productId) {
 
           <div class="list-group-item d-flex justify-content-between align-items-center">
-
             <div>
               <strong>Product ID:</strong> {{ item.productId }} <br>
               Quantity: {{ item.quantity }}
             </div>
-
             <div>
               ₹{{ item.unitPrice }}
             </div>
-
           </div>
 
           }
@@ -136,11 +117,23 @@
 
         </div>
 
-        <!-- CANCEL BUTTON -->
-        @if (
-        orderInfo.deliveryStatus !== DeliveryStatus.DELIVERED &&
-        orderInfo.deliveryStatus !== DeliveryStatus.CANCELLED
-        ) {
+        @if(orderInfo.deliveryStatus===DeliveryStatus.CANCELLED){
+
+        <div class="text-center">
+          <h5 class="text-danger">
+            Order Cancelled
+          </h5>
+        </div>
+
+        } @else if(orderInfo.deliveryStatus===DeliveryStatus.DELIVERED){
+
+        <div class="text-center">
+          <h5 class="text-success">
+            Order Delivered, Cannot be Cancel
+          </h5>
+        </div>
+
+        } @else {
 
         <button class="btn btn-danger w-100"
                 (click)="cancelOrder(orderInfo.orderId)"
@@ -150,7 +143,7 @@
 
         }
 
-        }
+        } <!-- ✅ THIS WAS MISSING -->
 
       </div>
 
