@@ -71,7 +71,7 @@ Relationships Overview:
 
 ---
 
-![E-Commerce ERD](images/erd.svg)
+![E-Commerce ERD](erd.svg)
 
 
 
